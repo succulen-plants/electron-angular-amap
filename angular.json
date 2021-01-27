@@ -14,13 +14,13 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "tsConfig": "tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.less"
             ],
             "scripts": [],
             "customWebpackConfig": {
@@ -107,11 +107,11 @@
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills-test.ts",
-            "tsConfig": "src/tsconfig.spec.json",
+            "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "scripts": [],
             "styles": [
-              "src/styles.scss"
+              "src/styles.less"
             ],
             "assets": [
               "src/assets"
@@ -158,5 +158,8 @@
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

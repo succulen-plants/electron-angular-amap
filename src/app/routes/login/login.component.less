@@ -1,0 +1,61 @@
+@import '~@delon/theme/styles/default';
+
+
+:host {
+  position: absolute;
+  top: 20%;
+  right: 18%;
+  display: block;
+  width: 558px;
+  padding: 70px 45px 60px;
+  overflow: hidden;
+  background-color: #fff;
+  ::ng-deep {
+    .ant-tabs-nav{
+      margin-bottom: 23px;
+    }
+    .ant-tabs .ant-tabs-bar {
+      margin-bottom: 24px;
+      border-bottom: 0;
+    }
+    .ant-tabs-tab {
+      position: relative;
+      padding-bottom: 16px;
+      color: #1890ff;
+      font-weight: 600;
+      font-size: 30px;
+      font-family: PingFangSC;
+      line-height: 33px;
+    }
+    .ant-tabs-ink-bar{
+      width: 50px !important;
+      height: 4px;
+      margin-left: 15px;
+    }
+    .ant-input-affix-wrapper .ant-input:not(:first-child) {
+      padding-left: 34px;
+    }
+    .icon {
+      margin-left: 16px;
+      color: rgba(0, 0, 0, 0.2);
+      font-size: 24px;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: color 0.3s;
+      &:hover {
+        color: @primary-color;
+      }
+    }
+    .other {
+      margin-top: 24px;
+      line-height: 22px;
+      text-align: left;
+      nz-tooltip {
+        vertical-align: middle;
+      }
+      .register {
+        float: right;
+      }
+    }
+  }
+}

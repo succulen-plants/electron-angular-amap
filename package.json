@@ -40,7 +40,19 @@
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@angular/animations": "11.1.0",
+    "@antv/data-set": "0.11.7",
+    "@delon/abc": "9.2.4",
+    "@delon/acl": "9.2.4",
+    "@delon/auth": "9.2.4",
+    "@delon/cache": "9.2.4",
+    "@delon/chart": "9.2.4",
+    "@delon/form": "9.2.4",
+    "@delon/mock": "9.2.4",
+    "@delon/theme": "9.2.4",
+    "ng-zorro-antd": "9.1.2"
+  },
   "devDependencies": {
     "@angular-builders/custom-webpack": "10.0.1",
     "@angular-devkit/build-angular": "0.1100.3",
@@ -72,7 +84,7 @@
     "conventional-changelog-cli": "2.1.1",
     "core-js": "3.6.5",
     "cross-env": "7.0.2",
-    "electron": "11.0.3",
+    "electron": "9.0.4",
     "electron-builder": "22.9.1",
     "electron-reload": "1.5.0",
     "eslint": "7.13.0",
