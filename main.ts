@@ -1,12 +1,18 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as fs from 'fs';
 
+// 窗口
 let win: BrowserWindow = null;
+// 文件目录map
+const fileObj ={};
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
 function createWindow(): BrowserWindow {
+
+  console.log('=========createWindow');
 
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
@@ -18,12 +24,14 @@ function createWindow(): BrowserWindow {
     width: size.width,
     height: size.height,
     webPreferences: {
+      webSecurity: false,
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
       enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
-  });
+    icon: '/Users/luotengzhan/Pictures/多肉/WechatIMG10.jpeg',
+});
 
   if (serve) {
 
@@ -53,12 +61,18 @@ function createWindow(): BrowserWindow {
   return win;
 }
 
+
+
+
 try {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+  app.on('ready', () => {
+    readImgFile();
+    setTimeout(createWindow, 400);
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
@@ -77,7 +91,45 @@ try {
     }
   });
 
+
 } catch (e) {
   // Catch Error
   // throw e;
+
 }
+
+function readImgFile(){
+  // const rs = fs.createReadStream('./src/assets/img/地质剖面图');
+  const fileNames = ['地质纵剖面图', '钻孔柱状图', 'Amax区划图'];
+  fileNames.forEach(name=>{
+    fs.readdir(`${__dirname}/src/assets/img/${name}`,function(err,files){
+      if (err) {
+        console.log(err)
+      }
+      // fileObj.set(name, files);
+      fileObj[name]= files;
+    })
+  })
+
+}
+
+
+ipcMain.on('read-img-file', function(event, arg) {
+  console.log('ipcMain=====',fileObj);
+  event.sender.send('img-file-reply', {fileObj, type:'img'});
+});
+
+ipcMain.on('my-event', function(event, arg) {
+
+  // readFile();
+  // const picPath = '/Users/luotengzhan/Pictures/多肉/WechatIMG10.jpeg'
+  //
+  // fs.readFile(picPath, (err, data)=>{
+  //   event.sender.send('my-event', {data, picPath});
+  // })
+});
+
+ipcMain.on('my-event', function(event, arg) {
+  console.log(arg);  // prints "ping"
+  event.returnValue = 'pong';
+});

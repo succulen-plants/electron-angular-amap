@@ -75,7 +75,19 @@ import {
   BarChartOutline,
   VideoCameraOutline,
   SyncOutline,
+  BlockOutline,
+  BorderlessTableOutline,
+  BuildOutline,
+  AppstoreAddOutline,
+  BorderBottomOutline,
+  BorderOuterOutline,
+  BorderInnerOutline,
+  PictureOutline,
+  AimOutline,
+  ColumnWidthOutline,
+
 } from '@ant-design/icons-angular/icons';
+
 
 export const ICONS_AUTO = [
   AlipayCircleOutline,
@@ -149,4 +161,14 @@ export const ICONS_AUTO = [
   BarChartOutline,
   VideoCameraOutline,
   SyncOutline,
+  BlockOutline,
+  BuildOutline,
+  BorderlessTableOutline,
+  AppstoreAddOutline,
+  BorderBottomOutline,
+  BorderOuterOutline,
+  BorderInnerOutline,
+  PictureOutline,
+  AimOutline,
+  ColumnWidthOutline,
 ];

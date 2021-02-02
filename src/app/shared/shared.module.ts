@@ -13,18 +13,19 @@ import { DelonFormModule } from '@delon/form';
 // import { AlainThemeModule } from '@delon/theme';
 import { TranslateModule } from '@ngx-translate/core';
 
-// import { SHARED_DELON_MODULES } from './shared-delon.module';
+import { SHARED_DELON_MODULES } from './shared-delon.module';
 import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 
 // #region third libs
 import { CountdownModule } from 'ngx-countdown';
+import {HeaderSelectDrawerComponent} from "../layout/default/header/header-select-drawer/header-select-drawer.component";
 
 
 const THIRDMODULES = [CountdownModule];
 // #endregion
 
 // #region your componets & directives
-const COMPONENTS = [];
+const COMPONENTS = [HeaderSelectDrawerComponent];
 const DIRECTIVES = [];
 // #endregion
 
@@ -36,7 +37,7 @@ const DIRECTIVES = [];
     ReactiveFormsModule,
     // AlainThemeModule.forChild(),
     DelonFormModule,
-    // ...SHARED_DELON_MODULES,
+    ...SHARED_DELON_MODULES,
     ...SHARED_ZORRO_MODULES,
     // third libs
     ...THIRDMODULES,
@@ -55,7 +56,7 @@ const DIRECTIVES = [];
     // AlainThemeModule,
     DelonFormModule,
     TranslateModule,
-    // ...SHARED_DELON_MODULES,
+    ...SHARED_DELON_MODULES,
     ...SHARED_ZORRO_MODULES,
     // third libs
     ...THIRDMODULES,

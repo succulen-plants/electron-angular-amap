@@ -1,0 +1,40 @@
+<!--注释：每个导航对应一个下拉导航栏，避免初次展开下拉导航栏transform动态效果不生效的问题-->
+<div class="header-select">
+  <!--可视化中心-->
+<div class="list" *ngFor="let key of objectKeys(renderData.pageRenderList)" >
+  <div  class="head-title" (mouseover)="open(key)" >
+    {{ renderData.pageRenderList[key].title}}
+    <i nz-icon [nzType]="renderData.pageRenderList[key].dropIconOption ? 'caret-up' : 'caret-down'"
+       nzTheme="outline"></i>
+  </div>
+  <div class="header-system-dropdown-menu"
+       [class.dropdown-hover]="renderData.pageRenderList[key].visibleOption"
+       (click)="handleMouseChange(key)"
+       (mouseleave)="close()">
+    <div class="header-system-list" (mouseleave)="close(key)">
+      <div class="header-system-item-wrap">
+        <div class="group" *ngFor="let group of renderData.pageRenderList[key].list;">
+          <div class="item" *ngFor="let item of group.list;">
+            <div class="header-system-item" *ngIf="item.auth === 'haveAuth'" [class]="item.auth" [class.disabled]="item.disabled">
+              <div class="header-system-item-content" (click)="handleJump(item)" >
+                <div class="menu-pic">
+                  <img *ngIf="item.navImg" [src]="item.navImg" alt="">
+                </div>
+                <div class="menu-content">
+                  <div class="title">{{item.title}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="groupName"> {{group.name}}</div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+

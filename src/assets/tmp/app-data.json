@@ -23,7 +23,8 @@
             {
               "text": "仪表盘V1",
               "link": "/dashboard/v1",
-              "i18n": "menu.dashboard.v1"
+              "i18n": "menu.dashboard.v1",
+              "icon": "anticon-dashboard"
             },
             {
               "text": "分析页",

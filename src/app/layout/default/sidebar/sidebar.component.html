@@ -1,0 +1,31 @@
+<div class="alain-default__aside-inner">
+  <nz-dropdown-menu #userMenu="nzDropdownMenu">
+    <ul nz-menu>
+      <!--<li nz-menu-item routerLink="/pro/account/center">{{ 'menu.account.center' | translate }}</li>-->
+      <!--<li nz-menu-item routerLink="/pro/account/settings">{{ 'menu.account.settings' | translate }}</li>-->
+    </ul>
+  </nz-dropdown-menu>
+  <sidebar-nav class="d-block py-lg"></sidebar-nav>
+  <ul class="alain-default__nav">
+    <!-- Menu -->
+    <li>
+      <div class="alain-default__nav-item" (click)="toggleCollapsedSidebar()">
+        <i nz-icon nzType="menu-{{ settings.layout.collapsed ? 'unfold' : 'fold' }}"></i>
+      </div>
+    </li>
+    <!-- Github Page -->
+
+    <!-- Lock Page -->
+    <!--<li class="hidden-mobile">-->
+    <!--<div class="alain-default__nav-item" routerLink="/passport/lock">-->
+    <!--<i nz-icon nzType="lock"></i>-->
+    <!--</div>-->
+    <!--</li>-->
+    <!-- Search Button -->
+    <!--<li class="hidden-pc" (click)="searchToggleChange()">-->
+      <!--<div class="alain-default__nav-item">-->
+        <!--<i nz-icon nzType="search"></i>-->
+      <!--</div>-->
+    <!--</li>-->
+  </ul>
+</div>

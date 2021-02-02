@@ -1,8 +1,22 @@
 // #region PLACEHOLDER, IMPORTANT: don't remove
-@import '~@delon/theme/styles/index';
+@import '~@delon/theme/system/index';
 @import '~@delon/abc/index';
 @import '~@delon/chart/index';
-@import '~@delon/theme/styles/layout/default/index';
-@import '~@delon/theme/styles/layout/fullscreen/index';
-
+@import '~@delon/theme/layout-default/style/index';
+@import '~@delon/theme/layout-blank/style/index';
 // #endregion
+
+
+::ng-deep {
+  .alain-default__aside{
+    width: 240px;
+  }
+  @media (min-width: 768px){
+    .alain-default__content {
+      margin-left: 254px;
+    }
+  }
+  .alain-default{
+    height: 100%;
+  }
+}

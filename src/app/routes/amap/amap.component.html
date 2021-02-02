@@ -1,0 +1,23 @@
+<div id="map" ></div>
+
+<div class="button">
+  <!--<a [class]="renderData.mapTypeClass" (click)="changeMayType()">-->
+    <!--<span class="icon"> <i nz-icon nzType="aim" nzTheme="outline"></i></span>-->
+    <!--<span class="name">卫星</span>-->
+  <!--</a>-->
+  <a class="item"  (click)="openRanging()">
+    <span class="icon"><i nz-icon nzType="column-width" nzTheme="outline"></i></span>
+    <span  class="name">{{renderData.openRangingStatus}}</span>
+  </a>
+</div>
+
+
+
+<!--<img id="show" [src]="imgUrl"  (click)="showImage()" />-->
+
+
+<!--<nz-modal [(nzVisible)]="isVisible" nzTitle="The first Modal">-->
+  <!--<ng-container *nzModalContent>-->
+    <!--<img [src]="imgUrl">-->
+  <!--</ng-container>-->
+<!--</nz-modal>-->

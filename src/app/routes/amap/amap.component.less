@@ -1,0 +1,99 @@
+
+#map{
+  width: 100%;
+  height: 100%;
+  //::ng-deep .amap-marker-label{
+  //  font-size: 16px;
+  //  width:60px;
+  //  text-align: center;
+
+  //  font-family: STLiti;
+  //  color: #1dd5d7;
+  //  background-color: rgba(255,255,255,0);
+  //  border: solid 2px rgba(100,255,200,0);
+  //}
+}
+
+:host ::ng-deep{
+  .alain-default__content{
+    height:100% !important;
+  }
+}
+
+.button{
+  position: absolute;
+  top:70px;
+  left: 230px;
+  color: #009cf9;
+  z-index: 1000;
+  padding: 14px 14px 13px;
+  background: #fff;
+  border-radius: 3px;
+  //height: 18px;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.7);
+  .item{
+    height: 18px;
+    padding: 0 12px;
+    font-size: 14px;
+    border-left: 1px #dbdee2 dashed;
+    font-weight: bolder;
+    color: #009cf9;
+  }
+  .icon{
+    width: 20px;
+    height: 18px;
+    line-height: 18px;
+    margin-right: 6px;
+    font-size: 16px;
+  }
+}
+.button:hover{background: #eee}
+
+:host ::ng-deep{
+  .amap-maptype-list{
+    display: none !important;
+  }
+  .amap-maptypecontrol{
+    top:6px !important;
+    left: 210px !important;
+    right: auto;
+  }
+  .amap-maptype-wrap{
+    height: 50px !important;
+    width: 120px;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0 3px 3px rgba(0,0,0,0.7);
+    cursor:default;
+    .amap-maptype-con{
+      height: 50px;
+      border: none;
+      right: auto;
+      //width: auto;
+      background-color: rgba(0,0,0,0);
+    }
+    .amap-maptype-win{
+      height: 30px;
+      border-radius: 3px;
+      border: none;
+      width: 54px;
+      top: 9px;
+      right: 0;
+    }
+    .amap-maptype-title{
+      left: 60px;
+      width: 40px;
+      top: 16px;
+      font-size: 13px;
+      font-weight: bolder;
+      color: #009cf9;
+      background-color: rgba(0,0,0,0);
+    }
+  }
+  .amap-maptype-wrap:hover{
+    background-color: #eee;
+  }
+
+
+}
+

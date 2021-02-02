@@ -1,0 +1,29 @@
+@import '~@delon/theme/index';
+.alain-default__aside-inner{
+  ::ng-deep .alain-default__nav-item{
+    position: absolute;
+    right: 0;
+    bottom: 10%;
+    color: @primary-color;
+    text-align:right;
+    i{
+      font-size: 1.5em !important;
+    }
+  }
+}
+//::ng-deep .sidebar-nav__item-text{
+//  color: rgba(0,0,0,0.5);
+//  line-height: 40px;
+//}
+
+::ng-deep .sidebar-nav__item-link{
+  color: rgba(0,0,0,0.5);
+  padding: 3px 32px 3px 24px;
+  .sidebar-nav__item-text{
+    line-height: 40px;
+  }
+}
+::ng-deep .sidebar-nav__depth1 .sidebar-nav__item-link{
+  padding-left: 48px;
+}
+
