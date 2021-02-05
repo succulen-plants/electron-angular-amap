@@ -20,13 +20,12 @@
   }
 }
 
-.button{
+.button-list{
   position: absolute;
   top:70px;
-  left: 230px;
+  left: 530px;
   color: #009cf9;
-  z-index: 1000;
-  padding: 14px 14px 13px;
+  z-index: 100;
   background: #fff;
   border-radius: 3px;
   //height: 18px;
@@ -37,6 +36,9 @@
     font-size: 14px;
     border-left: 1px #dbdee2 dashed;
     font-weight: bolder;
+    color:#5f6477;
+  }
+  .item.active{
     color: #009cf9;
   }
   .icon{
@@ -47,7 +49,14 @@
     font-size: 16px;
   }
 }
-.button:hover{background: #eee}
+
+.button-node{
+  display: inline-block;
+  height: 55px;
+  padding-top: 15px;
+  padding: 15px 10px;
+}
+.button-node:hover{background: #eee}
 
 :host ::ng-deep{
   .amap-maptype-list{
@@ -55,21 +64,22 @@
   }
   .amap-maptypecontrol{
     top:6px !important;
-    left: 210px !important;
+    left: 500px !important;
     right: auto;
+    z-index: 100 !important;
   }
   .amap-maptype-wrap{
-    height: 50px !important;
+    height: 60px !important;
     width: 120px;
     background: #fff;
     border-radius: 3px;
     box-shadow: 0 3px 3px rgba(0,0,0,0.7);
     cursor:default;
     .amap-maptype-con{
-      height: 50px;
+      height: 55px;
       border: none;
       right: auto;
-      //width: auto;
+      left: 10px;
       background-color: rgba(0,0,0,0);
     }
     .amap-maptype-win{
@@ -77,13 +87,13 @@
       border-radius: 3px;
       border: none;
       width: 54px;
-      top: 9px;
+      top: 15px;
       right: 0;
     }
     .amap-maptype-title{
       left: 60px;
       width: 40px;
-      top: 16px;
+      top: 18px;
       font-size: 13px;
       font-weight: bolder;
       color: #009cf9;
@@ -96,4 +106,46 @@
 
 
 }
+
+.pointModal{
+  width: 300px;
+  height: auto;
+  background-color: #fff;
+  box-shadow: 0 3px 6px -4px rgba(0,0,0,0.6), 0 6px 16px 0 rgba(0,0,0,0.4), 0 9px 28px 8px rgba(0,0,0,0.2);
+  border-radius: 2px;
+  border: 0;
+  position: absolute;
+  top: 164px;
+  right: 0px;
+  padding: 10px;
+  z-index: 100;
+  display: none;
+  .header{
+    padding: 16px 24px;
+    color: rgba(0,0,0,.85);
+    border-bottom: 1px solid #f0f0f0;
+    border-radius: 2px 2px 0 0;
+    color: rgba(0,0,0,.85);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+  }
+  .body{
+    padding: 24px;
+    font-size: 14px;
+    line-height: 1.5715;
+  }
+}
+.pointModal.show{
+  display: block;
+}
+
+
+
+.customIcon{
+  width: 32px;
+  height: 32px;
+  margin-right: 3px;
+}
+
 
