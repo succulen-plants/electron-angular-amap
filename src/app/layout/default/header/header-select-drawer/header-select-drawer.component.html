@@ -10,7 +10,7 @@
   <div class="header-system-dropdown-menu"
        [class.dropdown-hover]="renderData.pageRenderList[key].visibleOption"
        (click)="handleMouseChange(key)"
-       (mouseleave)="close()">
+       (mouseleave)="close(0)">
     <div class="header-system-list" (mouseleave)="close(key)">
       <div class="header-system-item-wrap">
         <div class="group" *ngFor="let group of renderData.pageRenderList[key].list;">

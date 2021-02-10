@@ -5,28 +5,40 @@
     <!--<span class="icon"> <i nz-icon nzType="aim" nzTheme="outline"></i></span>-->
     <!--<span class="name">卫星</span>-->
   <!--</a>-->
+  <!--<div class="button-node">-->
+    <!--<a class="item"  (click)="openRanging()" [class.active]="renderData.openRangingStatus">-->
+      <!--<span class="icon"><i nz-icon nzType="column-width" [nzTheme]="'outline'"></i></span>-->
+      <!--<span  class="name">测距</span>-->
+    <!--</a>-->
+  <!--</div>-->
+
   <div class="button-node">
     <a class="item"  (click)="openRanging()" [class.active]="renderData.openRangingStatus">
-      <span class="icon"><i nz-icon nzType="column-width" [nzTheme]="'outline'"></i></span>
-      <span  class="name">测距</span>
+      <div class="customIcon ranging" [class.active]="renderData.openRangingStatus"></div>
+      <div class="name">测距</div>
     </a>
   </div>
-  <div class="button-node">
-    <a class="item"  (click)="changeOverlayGroup()" [class.active]="renderData.overlayGroupStatus">
-    <span class="icon">
-      <i *ngIf="renderData.overlayGroupStatus" nz-icon nzType="eye" [nzTheme]="'fill'"></i>
-      <i *ngIf="!renderData.overlayGroupStatus" nz-icon nzType="eye-invisible"[nzTheme]="'fill'"></i>
-    </span>
-      <span  class="name">钻孔</span>
-    </a>
-  </div>
-  <div class="button-node">
-    <a class="item"  (click)="changeClickShow()" [class.active]="renderData.clickShow">
-    <span class="icon">
+  <!--<div class="button-node">-->
+    <!--<a class="item"  (click)="changeOverlayGroup()" [class.active]="renderData.overlayGroupStatus">-->
+    <!--<span class="icon">-->
       <!--<i *ngIf="renderData.overlayGroupStatus" nz-icon nzType="eye" [nzTheme]="'fill'"></i>-->
       <!--<i *ngIf="!renderData.overlayGroupStatus" nz-icon nzType="eye-invisible"[nzTheme]="'fill'"></i>-->
-    </span>
-      <span  class="name"><img class="customIcon" src="./assets/icons/图上选点.png">图上选点</span>
+    <!--</span>-->
+      <!--<span  class="name">钻孔</span>-->
+    <!--</a>-->
+  <!--</div>-->
+
+  <div class="button-node">
+    <a class="item"  (click)="changeOverlayGroup()" [class.active]="renderData.overlayGroupStatus">
+      <div class="customIcon overlayGroup" [class.active]="renderData.overlayGroupStatus"></div>
+      <div class="name">钻孔</div>
+    </a>
+  </div>
+
+  <div class="button-node">
+    <a class="item"  (click)="changeClickShow()" [class.active]="renderData.clickShow">
+      <!--<span  class="name"><img class="customIcon" src="./assets/icons/图上选点.png">图上选点</span>-->
+      <div class="customIcon selectedPoint" [class.active]="renderData.clickShow"></div><div class="name">图上选点</div>
     </a>
   </div>
   <div class="button-node">

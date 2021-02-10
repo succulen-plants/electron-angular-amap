@@ -3,12 +3,7 @@
   [formGroup]="form"
   (ngSubmit)="submit()"
   role="form">
-  <nz-tabset
-    [nzAnimated]="false"
-    class="tabs"
-    (nzSelectChange)="switch($event)">
-    <nz-tab
-      [nzTitle]="'欢迎登录'">
+  <div class="title">区域性地震安全性评价应用系统</div>
       <nz-alert
         *ngIf="error"
         [nzType]="'error'"
@@ -36,8 +31,6 @@
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
-    </nz-tab>
-  </nz-tabset>
   <!--  验证码-->
   <!--<app-verification-code (checkCode)="checkCode($event)" (keyDown)="keyDown($event)"></app-verification-code>-->
   <nz-form-item>

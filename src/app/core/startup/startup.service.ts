@@ -47,17 +47,31 @@ export class StartupService {
       // this.cache.set(data.name, data.fileList)
       const {fileObj, type} = data;
       console.log(fileObj);
-
       for (let key in fileObj) {
         console.log('=========fileMap1',key);
         const fileList = fileObj[key];
         this.getMenu(key, fileList, type);
-
       }
+    });
 
+    this._electronService.ipcRenderer.on('txt-file-reply', (event, data)=>{
+      console.log('text-file-reply=======',data);
+      // this.cache.set(data.name, data.fileList)
+      const {txtFileObj, type} = data;
+
+
+
+      this.cache.set("基岩时程", [txtFileObj]);
+      // console.log(txtFileObj);
+      // for (let key in txtFileObj) {
+      //   console.log('=========fileMap1',key);
+      //   const fileList = txtFileObj[key];
+      //   this.getMenu(key, fileList, type);
+      // }
     });
 
     this._electronService.ipcRenderer.send('read-img-file','read-img');
+    this._electronService.ipcRenderer.send('read-txt-file','read-txt');
 
   }
 
@@ -128,11 +142,13 @@ export class StartupService {
       console.log('file===',file);
       const newfile = file.replace(/%/, "%25");
       console.log('newfile===',newfile);
+      const index = file.lastIndexOf('.');
+      const fileName = file.substr(0, index);
       const node = {
-        "text": file,
+        "text": fileName,
         "link": `/achievement/file?url=${type}/${key}/${newfile}`,
         // "link": `/achievement/file?url=${type}/${key}`,
-        "i18n": file,
+        "i18n": fileName,
         "icon": icon,
       }
       children.push(node);

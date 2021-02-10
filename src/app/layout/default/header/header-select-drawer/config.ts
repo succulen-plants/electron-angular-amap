@@ -251,20 +251,7 @@ export const achievementList = [
       menu: 'menu.manage',
       auth: 'haveAuth',
       navImg: `${baseImgUrl}/icons/基岩时程.png`,
-      "children": [{
-        "text": "震中分布图",
-        "i18n": "震中分布图",
-        "group": true,
-        "hideInBreadcrumb": true,
-        "children":[
-          {
-            "text": "区域历史地震震中分布图",
-            "link": "/dashboard/v1",
-            "i18n": "区域历史地震震中分布图",
-            "icon": "anticon-border-bottom",
-          }
-        ]
-      }]
+      readFile: '基岩时程',
     }]},
 
 ];

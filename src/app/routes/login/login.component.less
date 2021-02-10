@@ -4,12 +4,44 @@
 :host {
   position: absolute;
   top: 20%;
-  right: 18%;
+  right: 1%;
   display: block;
-  width: 558px;
+  width: 460px;
   padding: 70px 45px 60px;
   overflow: hidden;
-  background-color: #fff;
+
+  .title{
+    width: 300px;
+    text-align: center;
+    color: #1890ff;
+    font-weight: 500;
+    font-size: 28px;
+    font-family: PingFangSC;
+    line-height: 40px;
+    margin-bottom: 20px;
+    margin-left: 30px;
+  }
+
+  //@media screen and (max-width: @screen-lg-min) {
+  //  right: 0;
+  //  width: 360px;
+  //  font-size: 22px;
+  //  font-weight: 380;
+  //  margin-left: 3px;
+  //}
+  @media screen and (max-width: @screen-lg-min) {
+    width: 520px;
+    background: white;
+    right: 3%;
+  }
+
+  //color: #1890ff;
+  //font-weight: 500;
+  //font-size: 30px;
+  //font-family: PingFangSC;
+  //line-height: 33px;
+
+
   ::ng-deep {
     .ant-tabs-nav{
       margin-bottom: 23px;
@@ -23,7 +55,7 @@
       padding-bottom: 16px;
       color: #1890ff;
       font-weight: 600;
-      font-size: 30px;
+      font-size: 28px;
       font-family: PingFangSC;
       line-height: 33px;
     }
@@ -59,3 +91,5 @@
     }
   }
 }
+
+

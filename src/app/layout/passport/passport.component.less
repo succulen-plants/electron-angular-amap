@@ -6,7 +6,13 @@
       display: flex;
       flex-direction: column;
       min-height: 100%;
-      background: #f0f2f5;
+      min-width:768px;
+      background-color: #f5f7fa;
+      background: url('src/assets/登录.png') no-repeat;
+      background-size: cover;
+      -webkit-background-size: cover;
+      -o-background-size: cover;
+      background-position: center 0;
     }
     .top-logo {
       position: absolute;
@@ -53,18 +59,34 @@
       margin-bottom: 24px;
     }
 
-    @media (min-width: @screen-md-min) {
-      .container {
-        //background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
-        //background-image: url('src/assets/img/sec/passport.png');
-        background-repeat: no-repeat;
-        //background-position: center 110px;
-        background-size: 100%;
-      }
-      .wrap {
-        padding: 32px 0 24px;
-      }
+
+    @media screen and (max-width: @screen-lg-min) {
+    .container {
+      background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
+      background-repeat: no-repeat;
+      background-size: 100%;
+      background-position: center 110px;
     }
+  }
+
+    //@media (min-width: @screen-md-min) {
+    //  .container {
+    //    //background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
+    //    //background-image: url('src/assets/登录.png');
+    //    //background-repeat: no-repeat;
+    //    ////background-position: center 110px;
+    //    //background-size: 100%;
+    //    //background: url('src/assets/登录.png') no-repeat 100% auto center scroll !important;
+    //    background: url('src/assets/登录.png') no-repeat;
+    //    background-size: cover;
+    //    -webkit-background-size: cover;
+    //    -o-background-size: cover;
+    //    background-position: center 0;
+    //  }
+    //  .wrap {
+    //    padding: 32px 0 24px;
+    //  }
+    //}
     .top {
       text-align: center;
     }

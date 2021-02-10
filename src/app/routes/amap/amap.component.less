@@ -52,9 +52,10 @@
 
 .button-node{
   display: inline-block;
-  height: 55px;
+
+  padding: 3px 10px;
   padding-top: 15px;
-  padding: 15px 10px;
+  vertical-align: middle;
 }
 .button-node:hover{background: #eee}
 
@@ -146,6 +147,52 @@
   width: 32px;
   height: 32px;
   margin-right: 3px;
+}
+
+//.item{
+//  .selectedPoint {
+//    content: url("/assets/icons/图上选点灰色.png");
+//  }
+//}
+//.item.active{
+//    .selectedPoint{
+//      content: url("/assets/icons/图上选点.png");
+//    }
+//  }
+
+.ranging{
+  background-image: url("/assets/icons/尺子灰色.png");
+  background-size: 100%;
+  display: inline-block;
+}
+.ranging.active{
+  background-image: url("/assets/icons/尺子.png");
+}
+
+.selectedPoint{
+  background-image: url("/assets/icons/图上选点灰色.png");
+  background-size: 100%;
+  display: inline-block;
+}
+.selectedPoint.active{
+  background-image: url("/assets/icons/图上选点.png");
+}
+
+.overlayGroup{
+  background-image: url("/assets/icons/隐藏钻孔灰色.png");
+  background-size: 100%;
+  display: inline-block;
+}
+.overlayGroup.active{
+  background-image: url("/assets/icons/显示钻孔.png");
+}
+
+.button-node{
+  .name{
+    display: inline-block;
+    height: 40px;
+    vertical-align: middle;
+  }
 }
 
 

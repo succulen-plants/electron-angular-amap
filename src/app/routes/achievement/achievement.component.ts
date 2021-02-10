@@ -42,6 +42,9 @@ export class AchievementComponent implements OnInit, OnDestroy {
           console.log('queryParams====',queryParams);
           const newUrl = queryParams.url.replace(/%/, "%25");
           this.imgUrl = `${environment.baseUrl}/assets/${newUrl}`;
+          const index1 = queryParams.url.lastIndexOf('/');
+          const index2 = queryParams.url.lastIndexOf('.');
+          this.renderData.title = queryParams.url.substring(index1+1, index2);
         });
       }else {
         this.activatedRoute.data

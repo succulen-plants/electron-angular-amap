@@ -129,8 +129,8 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
   // 开启测距功能
   openRanging(){
-    console.log(this.renderData.rangingTool);
-    if(this.renderData.openRangingStatus){
+    console.log(this.renderData.openRangingStatus);
+    if(!this.renderData.openRangingStatus){
       this.renderData.rangingTool.rule({
         //同 RangingTool 的 自定义 设置，缺省为默认样式
       });
@@ -139,7 +139,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     }
     this.renderData.openRangingStatus = !this.renderData.openRangingStatus;
 
-    // this.cdr.detectChanges();
+    this.cdr.detectChanges();
   }
 
   // 添加多边形区域
