@@ -17,6 +17,7 @@ const COMPONENTS = [
   LayoutDefaultComponent,
   LayoutNomenuComponent,
   // LayoutFullScreenComponent,
+  HeaderStorageComponent,
   HeaderComponent,
   SidebarComponent,
   ...SETTINGDRAWER,
@@ -31,6 +32,7 @@ const HEADERCOMPONENTS = [
 import {HeaderLogoComponent} from "./default/header/components/logo.component";
 import {LayoutNomenuComponent} from "./noMenu/nomenu.component";
 import {LayoutPassportComponent} from "./passport/passport.component";
+import {HeaderStorageComponent} from "./default/header/components/storage.component";
 const PASSPORT = [LayoutPassportComponent];
 
 @NgModule({

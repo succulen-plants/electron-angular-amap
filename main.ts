@@ -3,6 +3,8 @@ import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
 
+import {asyncReadtxtFile} from './components/readTxtFile';
+
 // 窗口
 let win: BrowserWindow = null;
 // 文件目录map
@@ -71,8 +73,7 @@ try {
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
-    readImgFile();
-    readTxtFile();
+    readDirectory();
     setTimeout(createWindow, 400);
   });
 
@@ -100,48 +101,52 @@ try {
 
 }
 
-/**
- * 读取图片
- */
-function readImgFile(){
-  // const rs = fs.createReadStream('./src/assets/img/地质剖面图');
-  const fileNames = ['地质纵剖面图', '钻孔柱状图', 'Amax区划图'];
-  fileNames.forEach(name=>{
-    fs.readdir(`${__dirname}/src/assets/img/${name}`,function(err,files){
-      if (err) {
-        console.log(err)
-      }
-      // imgFileObj.set(name, files);
-      imgFileObj[name]= files;
-    })
-  })
-}
 
 ipcMain.on('read-img-file', function(event, arg) {
   console.log('ipcMain=====',imgFileObj);
   event.sender.send('img-file-reply', {imgFileObj, type:'img'});
 });
 
-/**
- * 读取txt
- */
 
-function readTxtFile() {
-  const fileNames = ['基岩时程'];
-  fileNames.forEach(name=>{
-    const path = `${__dirname}/src/assets/txt/${name}`;
-    // directory = {
-    //   name,
-    //   path,
-    //   children:[]
-    // }
-    txtFileObj = readFile(path, name);
-    console.log('====txtFileObj===',txtFileObj);
+ipcMain.on('read-file-directorys', function(event, arg) {
+  console.log('ipcMain=====',directorys);
+  event.sender.send('file-directorys-reply', {menu:directorys});
+});
+
+/**
+ * 获取文件目录， 并创建服务菜单
+ */
+let   directorys = [
+  {name:'基岩时程', type:'txt', menu:{}},
+  {name:'地质纵剖面图', type:'img', menu:{}},
+  {name:'钻孔柱状图', type:'img', menu:{}},
+  {name:'Amax区划图', type:'img', menu:{}},
+];
+function readDirectory() {
+  directorys = [
+    {name:'基岩时程', type:'txt', menu:{}},
+    {name:'地质纵剖面图', type:'img', menu:{}},
+    {name:'钻孔柱状图', type:'img', menu:{}},
+    {name:'Amax区划图', type:'img', menu:{}},
+  ];
+  directorys.forEach((item, index)=>{
+    const path = `${__dirname}/src/assets/${item.type}/${item.name}`;
+    const directorysObj = readFile(path, item.name, item.type, );
+    directorys[index].menu = directorysObj;
   });
 
 }
 
-function readFile(path, name){
+/**
+ *
+ * @param path： 文件路径
+ * @param name： 文件名称
+ * @param type： 文件类型
+ * @param relativePath: 文件内的相对路径
+ * @returns {{text: *, i18n: *, children: Array}}
+ */
+
+function readFile(path, name, type){
   const menu= {
     "text": name,
     "i18n": name,
@@ -154,27 +159,35 @@ function readFile(path, name){
   };
   const files = fs.readdirSync(path);
   menu.children = files.map(file=>{
-    const type:any =  inspectAndDescribeFile(`${path}/${file}`);
-    if(type !== 'file'){
-      return readFile(`${path}/${file}`, file);
+    const fileType =  inspectAndDescribeFile(`${path}/${file}`);
+    if(fileType !== 'file'){
+      return readFile(`${path}/${file}`, file, type);
     }else {
+      let icon = '';
+      let link = '';
+      if(type === 'img'){
+        icon = "anticon-picture";
+        link = '/achievement/file';
+      }else if(type==='txt') {
+        icon = "anticon-file-text";
+        link = '/txt';
+      }
+      const newfile = file.replace(/%/, "%25");
+      const index = file.lastIndexOf('.');
+      const fileName = file.substr(0, index);
+      const relativePathindex = path.indexOf('txt');
+      const  relativePath = path.substr(relativePathindex+4);
       const node = {
-        "text": file,
-        // "link": `/achievement/file?url=${type}/${key}/${newfile}`,
-        // "link": `/achievement/file?url=${type}/${key}`,
-        "i18n": file,
+        "text": fileName,
+        "link": `${link}?url=${type}/${relativePath}/${newfile}`,
+        "i18n": fileName,
+        icon,
       }
       return node;
     }
   })
   return menu;
 }
-
-ipcMain.on('read-txt-file', function(event, arg) {
-  console.log('ipcMain=====',txtFileObj);
-  event.sender.send('txt-file-reply', {txtFileObj, type:'txt'});
-});
-
 
 /**
  * 判断路径是文件还是文件夹
@@ -194,3 +207,9 @@ function inspectAndDescribeFile(filePath) {
 
   return type;
 }
+
+// 异步读取txt文件内容
+asyncReadtxtFile(`${__dirname}/src/assets/`);
+
+
+

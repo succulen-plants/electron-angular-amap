@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared';
-import {ChartsComponent} from "./charts.component";
-import {ChartsRoutingModule} from "./charts-routing.module";
+import {TxtComponent} from "./txt.component";
+import {TxtRoutingModule} from "./txt-routing.module";
+import {ChartsComponent} from "../components/charts/charts.component";
 
 
-
-const COMPONENTS = [ChartsComponent];
+const COMPONENTS = [TxtComponent, ChartsComponent];
 
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({
-  imports: [SharedModule, ChartsRoutingModule],
+  imports: [SharedModule, TxtRoutingModule],
   declarations: [...COMPONENTS, ...COMPONENTS_NOROUNT],
   providers: [],
   entryComponents: [],
 })
-export class ChartsModule {}
+export class TxtModule {}

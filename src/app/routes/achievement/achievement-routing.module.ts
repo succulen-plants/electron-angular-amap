@@ -4,12 +4,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {AchievementComponent} from "./achievement.component";
+import {DefaultRouteComponent} from "../default-route.component";
 /**
  * 业务组件
  */
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dgz', pathMatch: 'full' },
   {
     path: 'dgz',
     component: AchievementComponent,
@@ -55,7 +55,6 @@ const routes: Routes = [
       title:'区域新单元构造分区图'
     },
   },
-
   {
     path: 'qlzzf',
     component: AchievementComponent,

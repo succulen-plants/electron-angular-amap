@@ -19,7 +19,8 @@ export const achievementList = [
       moduleName: 'menu.manage.account',
       auth: 'haveAuth',
       navImg: `${baseImgUrl}/icons/地震构造图.png`,
-      "children": [{
+      "children": [
+        {
         "text": "地震构造图",
         "i18n": "地震构造图",
         "group": true,

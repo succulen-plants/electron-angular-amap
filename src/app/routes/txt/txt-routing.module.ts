@@ -3,7 +3,7 @@
  */
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {ChartsComponent} from "./charts.component";
+import {TxtComponent} from "./txt.component";
 /**
  * 业务组件
  */
@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'dgz', pathMatch: 'full' },
   {
     path: 'dgz',
-    component: ChartsComponent,
+    component: TxtComponent,
     data: {
       parent: '地震构造图',
       imgName:'区域地震构造图.png',
@@ -25,4 +25,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ChartsRoutingModule {}
+export class TxtRoutingModule {}

@@ -30,98 +30,40 @@ export class DefaultRouteComponent   implements OnInit {
   }
 
   ngOnInit() {
-    const menuList = this.cache.getNone('menuList');
+    // const menuList = this.cache.getNone('menuList');
+    // const menuName = this.cache.getNone('menuName');
+    // console.log(menuName);
     this.activatedRoute.url.subscribe(url => {
       const menuName:any = this.cache.getNone('menuName');
-      this.moduleName = this.cache.getNone('moduleName');
-      console.log('=====moduleName===',this.moduleName);
       console.log('===menuName===',menuName);
       if(menuName){
-        const currentMenu = menuList[menuName];
-        this.getDefaultRoute(currentMenu[0]);
+        let menu:any;
+        console.log(menu);
+        try {
+          menu = this.cache.getNone(menuName);
+          console.log(menu);
+          this.getDefaultRoute(menu[0]);
+        }catch (e) {
+          console.log(e);
+        }
+
+
+        // const currentMenu = menuList[menuName];
+
       }
     });
   }
 
-  // 递归获取默认路由
-  // getDefaultRoute(currentMenu){
-  //   console.log('currentMenu====',currentMenu);
-  //   if(currentMenu && currentMenu.length>0){
-  //     if(currentMenu[0].children && currentMenu[0].children.length>0){
-  //       this.getDefaultRoute(currentMenu[0].children);
-  //     }else {
-  //       console.log(currentMenu[0].link);
-  //       this.router.navigateByUrl(currentMenu[0].link)
-  //       return;
-  //     }
-  //   }
-  // }
 
-  // getDefaultRoute(currentMenu, moduleName){
-  //   console.log('currentMenu====',currentMenu);
-  //   console.log('moduleName====',moduleName);
-  //   if(currentMenu && currentMenu.length>0){
-  //     if(currentMenu[0].children && currentMenu[0].children.length>0){
-  //       const list:any  = currentMenu[0].children;
-  //       console.log(list);
-  //       const tage:any = list.find((item:any)=>{
-  //           if(item.i18n === moduleName){
-  //            return item;
-  //         }
-  //       })
-  //       console.log(tage);
-  //       if(tage && tage.children && tage.children.length>0){
-  //         this.router.navigateByUrl(tage.children[0].link)
-  //       }
-  //     }
-  //   }
-  //   return '';
-  // }
 
-  getDefaultRoute(currentMenu){
+  getDefaultRoute(currentMenu:any){
     console.log('currentMenu====',currentMenu);
-    console.log('moduleName====',this.moduleName);
-    // if(currentMenu && currentMenu.length>0){
-    //   if(currentMenu[0].children && currentMenu[0].children.length>0){
-    //     const list:any  = currentMenu[0].children;
-    //     console.log(list);
-    //     const tage:any = list.find((item:any)=>{
-    //         if(item.i18n === moduleName){
-    //          return item;
-    //       }
-    //     })
-    //     console.log(tage);
-    //     if(tage && tage.children && tage.children.length>0){
-    //       this.router.navigateByUrl(tage.children[0].link)
-    //     }
-    //   }
-    // }
-    // return '';
-    let tage:any;
-    if(currentMenu instanceof Array){
-      tage = currentMenu.find((item:any)=>{
-        if(item.i18n === this.moduleName){
-          this.haveGetModule =true;
-          return item;
-        }
-      })
-      if(tage){
-        if(!tage.link){
-          currentMenu = tage.children[0];
-        }else {
-          currentMenu = tage;
-        }
-      }else{
-        if(this.haveGetModule){
-          currentMenu = currentMenu[0];
-        }
-      }
-    }
+
 
     if(currentMenu.link){
       this.router.navigateByUrl(currentMenu.link)
     }else{
-        this.getDefaultRoute(currentMenu.children)
+        this.getDefaultRoute(currentMenu.children[0])
     }
   }
 

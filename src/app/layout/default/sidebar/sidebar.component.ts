@@ -13,4 +13,9 @@ export class SidebarComponent {
   toggleCollapsedSidebar() {
     this.settings.setLayout('collapsed', !this.settings.layout.collapsed);
   }
+
+  select(event){
+    console.log('event====',event);
+    event._selected = true;
+  }
 }

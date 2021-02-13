@@ -51,7 +51,9 @@
     "@delon/form": "^11.2.0",
     "@delon/mock": "^11.2.0",
     "@delon/theme": "^11.2.0",
+    "echarts": "5.0.2",
     "ng-zorro-antd": "^11.0.1",
+    "ngx-echarts": "6.0.0",
     "ngx-electron": "2.2.0",
     "screenfull": "5.1.0"
   },

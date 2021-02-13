@@ -25,7 +25,6 @@ export class AchievementComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute
   ) {
 
-
   }
 
   form: FormGroup;

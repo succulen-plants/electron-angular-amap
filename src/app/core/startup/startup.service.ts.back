@@ -5,26 +5,22 @@
  * author: Luo Teng Zhan
  * time: 2019/11/1
  */
-
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { zip } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { MenuService, SettingsService, TitleService, ALAIN_I18N_TOKEN } from '@delon/theme';
-import { ACLService } from '@delon/acl';
-import { TranslateService } from '@ngx-translate/core';
-import { I18NService } from '../i18n/i18n.service';
-
-import { NzIconService } from 'ng-zorro-antd';
+// import { MenuService, SettingsService, TitleService, ALAIN_I18N_TOKEN } from '@delon/theme';
+import { CacheService } from '@delon/cache';
 import { ICONS_AUTO } from '../../../style-icons-auto';
 import { ICONS } from '../../../style-icons';
-import { CacheService } from '@delon/cache';
-import { UserAuthData } from '@shared/utils/interfaces';
-import { environment } from '@env/environment';
-const { baseUrl } = environment;
 
-
-
+// import { UserAuthData } from '@shared/utils/interfaces';
+// import { environment } from '../../../environments/environment';
+import { NzIconService } from 'ng-zorro-antd/icon';
+import {ACLService} from "@delon/acl";
+import {MenuService, SettingsService} from "@delon/theme";
+import {ElectronService} from "ngx-electron";
+// const { baseUrl } = environment;
 /**
  * 用于应用启动时
  * 一般用来获取应用所需要的基础数据等
@@ -34,65 +30,88 @@ export class StartupService {
   constructor(
     iconSrv: NzIconService,
     private menuService: MenuService,
-    private translate: TranslateService,
-    @Inject(ALAIN_I18N_TOKEN) private i18n: I18NService,
     private settingService: SettingsService,
-    private aclService: ACLService,
-    private titleService: TitleService,
+    // private aclService: ACLService,
+    // private titleService: TitleService,
     private httpClient: HttpClient,
     public cache: CacheService,
+    private _electronService: ElectronService,
   ) {
     iconSrv.addIcon(...ICONS_AUTO, ...ICONS);
     iconSrv.fetchFromIconfont({
-      // scriptUrl: 'https://at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
-      // scriptUrl: 'https://at.alicdn.com/t/font_1472314_p0oif2aroap.js',
-      scriptUrl: 'https://at.alicdn.com/t/font_1472314_yacsmjjh9w.js',
+      scriptUrl: 'https://at.alicdn.com/t/font_1472314_c904nlprpj.js',
     });
+
+    this._electronService.ipcRenderer.on('img-file-reply', (event, data)=>{
+      console.log('ipcRenderer=======',data);
+      // this.cache.set(data.name, data.fileList)
+      const {fileObj, type} = data;
+      console.log(fileObj);
+      for (let key in fileObj) {
+        console.log('=========fileMap1',key);
+        const fileList = fileObj[key];
+        this.getMenu(key, fileList, type);
+      }
+    });
+
+    this._electronService.ipcRenderer.on('txt-file-reply', (event, data)=>{
+      console.log('text-file-reply=======',data);
+      // this.cache.set(data.name, data.fileList)
+      const {txtFileObj, type} = data;
+
+
+
+      this.cache.set("基岩时程", [txtFileObj]);
+      // console.log(txtFileObj);
+      // for (let key in txtFileObj) {
+      //   console.log('=========fileMap1',key);
+      //   const fileList = txtFileObj[key];
+      //   this.getMenu(key, fileList, type);
+      // }
+    });
+
+    this._electronService.ipcRenderer.send('read-img-file','read-img');
+    this._electronService.ipcRenderer.send('read-txt-file','read-txt');
+
   }
 
   // userId:number;
   menuMap = new Map();
+  // 页面权限
+  opts = {};
 
   load(): Promise<any> {
     // only works with promises
     // https://github.com/angular/angular/issues/15088
     return new Promise(resolve => {
       zip(
-        this.httpClient.get(`assets/tmp/i18n/${this.i18n.defaultLang}.json`),
         this.httpClient.get('assets/tmp/app-data.json'),
       )
         .pipe(
           // 接收其他拦截器后产生的异常消息
-          catchError(([langData, appData]) => {
+          catchError(([appData]) => {
             resolve(null);
-            return [langData, appData];
+            return [appData];
           }),
         )
         .subscribe(
-          ([langData, appData]) => {
+          ([appData]) => {
             // setting language data
-            this.translate.setTranslation(this.i18n.defaultLang, langData);
-            this.translate.setDefaultLang(this.i18n.defaultLang);
-            const  userAuthData: UserAuthData = this.cache.getNone('userAuth');
-            // this.userId = userAuthData.orgs[0]["userId"];
-            if(userAuthData){
-              this.getMenuMap(userAuthData);
-              // this.userAuthApp(appData, userAuthData);
-            }
             // application data
             const res: any = appData;
-            // 应用信息：包括站点名、描述、年份
+            const user = this.cache.getNone('userInfo');
+            // // 应用信息：包括站点名、描述、年份
             this.settingService.setApp(res.app);
-            // 用户信息：包括姓名、头像、邮箱地址
-            this.settingService.setUser(res.user);
-            // ACL：设置权限为全量
-            this.aclService.setFull(true);
-            // 初始化菜单
-            // console.log(res.menu);
-
-            // 设置页面标题的后缀
-            this.titleService.default = '';
-            this.titleService.suffix = res.app.name;
+            // // 用户信息：包括姓名、头像、邮箱地址
+            // this.settingService.setUser(user);
+            // // ACL：设置权限为全量
+            // this.aclService.setFull(true);
+            // // 初始化菜单
+            this.menuService.add(res.menu);
+            //
+            // // 设置页面标题的后缀
+            // this.titleService.default = '';
+            // this.titleService.suffix = res.app.name;
           },
           () => {},
           () => {
@@ -102,93 +121,50 @@ export class StartupService {
     });
   }
 
-
   /**
-   * 模块菜单生成 getMenuMap
-   * @param userAuthData, 租户权限数据， 包含菜单 和 页面颗粒级的权限列表
-   * apps 模块列表
-   * opts 页面权限列表
-   * 菜单构建思路： apps 中有多个模块， 每个模块对应自己的菜单，菜单通过children 层次展示； 页面权限存储在每个菜单中；
-   * 菜单分为： 模块级， 父级菜单， 叶子节点菜单
-   * traverseMenuTree： 递归生成菜单树
+   *
+   * @param key ：文件夹名字
+   * @param fileList ： 文件列表
+   * @param type： 文件类型
    */
-  getMenuMap(userAuthData: UserAuthData){
-    const menuList = {};
-    if(userAuthData.apps && userAuthData.apps.length){
-      // 临时写法， 正常写法：appData.menu[0].children =
-      userAuthData.apps.forEach(item => {
-        const menu:MenuIn = {
-          "text": item.name,
-          "i18n": item.objName,
-          // "group": true,
-          // "hideInBreadcrumb": true,
-          "children":[],
-        }
-        menu.children.push(...this.traverseMenuTree(userAuthData.functions[item.id]));
-        menuList[item.objName]= [menu];
-      })
-    }
-    this.cache.remove('menuList');
-    this.cache.set('menuList', menuList);
-    const menuName:string = this.cache.getNone('menuName');
-    if(menuName && Object.keys(menuList).length>0){
-      console.log(menuList[menuName]);
-      if(menuList[menuName]) this.menuService.add(menuList[menuName]);
-    }
-  }
+  getMenu(key, fileList, type){
+    // const fileList:any[] = this.cache.getNone(item.title);
+    console.log(key, fileList, type);
 
-  userAuthApp(appData, userAuthData:UserAuthData) {
-    appData.user.name = userAuthData.name;
-    if(userAuthData.apps && userAuthData.apps.length){
-      // 临时写法， 正常写法：appData.menu[0].children =
-      appData.menu[0].children.unshift(...this.traverseMenuTree(userAuthData.functions[userAuthData.apps[0].id]));
+    const children = [];
+    let icon = '';
+    if(type === 'img'){
+      icon = "anticon-picture"
     }
-    console.log('appData.menu====', appData.menu);
-  }
 
-  traverseMenuTree(data){
-    return data.map(item =>{
-      const menu:MenuIn= {
-        "text": item.name,
-        "i18n": item.objName,
-        // "icon": `anticon-${item.icon}`,
-        // "icon": `anticon-dashboard`,
-        // "icon": { type: 'iconfont', iconfont: 'icondmpjikaguanli' },
-        // icon: { type: 'iconfont', iconfont: item.icon},
-        "icon": { type: 'img', value: `${baseUrl}/assets/img/idc/menu/${item.icon}`},
-        "children":[],
-        "data":item,
+    fileList.forEach(file=>{
+      // console.log('file===',file.toString());
+      console.log('file===',file);
+      const newfile = file.replace(/%/, "%25");
+      console.log('newfile===',newfile);
+      const index = file.lastIndexOf('.');
+      const fileName = file.substr(0, index);
+      const node = {
+        "text": fileName,
+        "link": `/achievement/file?url=${type}/${key}/${newfile}`,
+        // "link": `/achievement/file?url=${type}/${key}`,
+        "i18n": fileName,
+        "icon": icon,
       }
-      if(item.children && item.children.length){
-        menu.children = this.traverseMenuTree(item.children);
-      }else {
-        if(item.objName === 'menu.micromodule'){
-          this.cache.set('roomNumber', 202)
-          menu.children = [{
-            "text": '202房间',
-            "i18n": `202${this.i18n.fanyi('app.room')}`,
-            "link": '/defalut/visualization/micromodule/202'
-            // "link": '/default/visualization/micromodule/202'
-            // "icon": `anticon-${item.icon}`,
-            // "icon": `anticon-dashboard`,
-            // icon: { type: 'iconfont', iconfont: item.icon},
-          }];
-        }else {
-          const index  = item.link.lastIndexOf("/#/");
-          if(index!==-1){
-            menu.link = item.link.slice(index+3);
-            menu.link = `/user/${menu.link}`;
-            console.log(menu.link);
-          }else {
-            menu.link = item.link;
-          }
-        }
-        // delete menu.externalLink;
-      }
-      return menu;
+      children.push(node);
+    });
+    const menu = [{
+      "text": key,
+      "i18n": key,
+      "group": true,
+      "hideInBreadcrumb": true,
+      "children":children
+    }]
 
-    })
+    this.cache.set(key, menu)
+
   }
+
 }
 
 
@@ -201,8 +177,12 @@ interface MenuIn {
   "children"?:any,
   "data"?:{},
   "link"?:string,
+  "externalLink"?:string,
+  "target"?:string,
   "group"?: boolean,
   "hideInBreadcrumb"?: boolean,
+  "pageAutherList"?:any,
+  "urlType"?:number
 }
 
 

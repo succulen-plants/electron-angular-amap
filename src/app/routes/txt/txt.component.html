@@ -4,12 +4,8 @@
 <div class="main">
   <div class="content">
     <nz-card [nzBordered]="false">
-      <img
-        nz-image
-        width="80%"
-        [nzSrc]="imgUrl"
-        alt=""
-      />
+      <div class="table"><st [data]="data" [columns]="columns" size="small" bordered="true" ps="15"></st></div>
+      <div class="charts"><app-charts [data]="data"></app-charts></div>
     </nz-card>
   </div>
 </div>

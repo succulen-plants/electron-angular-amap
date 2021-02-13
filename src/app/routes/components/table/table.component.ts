@@ -11,17 +11,13 @@ import {STColumn, STComponent, STData} from "@delon/abc/st";
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.less'],
 })
-export class TableComponent implements {
+export class TableComponent {
 
-  @Input() data: STData[] = [];
-  @Input() columns: STColumn[] = [];
+  // @Input() data: STData[] = [];
+  // @Input() columns: STColumn[] = [];
   @ViewChild('st', { static: false }) private st: STComponent;
 
-
-  constructor(
-  ) {
-
-  }
+  constructor() {}
 
 
 

@@ -5,7 +5,7 @@
       <!--<li nz-menu-item routerLink="/pro/account/settings">{{ 'menu.account.settings' | translate }}</li>-->
     </ul>
   </nz-dropdown-menu>
-  <sidebar-nav class="d-block py-lg"></sidebar-nav>
+  <sidebar-nav class="d-block py-lg"  openStrictly="true" (select)="select($event)"></sidebar-nav>
   <ul class="alain-default__nav">
     <!-- Menu -->
     <li>

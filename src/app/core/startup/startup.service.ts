@@ -42,36 +42,19 @@ export class StartupService {
       scriptUrl: 'https://at.alicdn.com/t/font_1472314_c904nlprpj.js',
     });
 
-    this._electronService.ipcRenderer.on('img-file-reply', (event, data)=>{
+    this._electronService.ipcRenderer.on('file-directorys-reply', (event, data)=>{
       console.log('ipcRenderer=======',data);
       // this.cache.set(data.name, data.fileList)
-      const {fileObj, type} = data;
-      console.log(fileObj);
-      for (let key in fileObj) {
-        console.log('=========fileMap1',key);
-        const fileList = fileObj[key];
-        this.getMenu(key, fileList, type);
-      }
+      const {menu} = data;
+      console.log(menu);
+      menu.forEach(item=>{
+        this.cache.set(item.name, [item.menu])
+      })
     });
 
-    this._electronService.ipcRenderer.on('txt-file-reply', (event, data)=>{
-      console.log('text-file-reply=======',data);
-      // this.cache.set(data.name, data.fileList)
-      const {txtFileObj, type} = data;
 
-
-
-      this.cache.set("基岩时程", [txtFileObj]);
-      // console.log(txtFileObj);
-      // for (let key in txtFileObj) {
-      //   console.log('=========fileMap1',key);
-      //   const fileList = txtFileObj[key];
-      //   this.getMenu(key, fileList, type);
-      // }
-    });
-
-    this._electronService.ipcRenderer.send('read-img-file','read-img');
-    this._electronService.ipcRenderer.send('read-txt-file','read-txt');
+    this._electronService.ipcRenderer.send('read-file-directorys','read-file');
+    // this._electronService.ipcRenderer.send('read-txt-file','read-txt');
 
   }
 
@@ -107,7 +90,7 @@ export class StartupService {
             // // ACL：设置权限为全量
             // this.aclService.setFull(true);
             // // 初始化菜单
-            this.menuService.add(res.menu);
+            // this.menuService.add(res.menu);
             //
             // // 设置页面标题的后缀
             // this.titleService.default = '';
@@ -121,68 +104,10 @@ export class StartupService {
     });
   }
 
-  /**
-   *
-   * @param key ：文件夹名字
-   * @param fileList ： 文件列表
-   * @param type： 文件类型
-   */
-  getMenu(key, fileList, type){
-    // const fileList:any[] = this.cache.getNone(item.title);
-    console.log(key, fileList, type);
-
-    const children = [];
-    let icon = '';
-    if(type === 'img'){
-      icon = "anticon-picture"
-    }
-
-    fileList.forEach(file=>{
-      // console.log('file===',file.toString());
-      console.log('file===',file);
-      const newfile = file.replace(/%/, "%25");
-      console.log('newfile===',newfile);
-      const index = file.lastIndexOf('.');
-      const fileName = file.substr(0, index);
-      const node = {
-        "text": fileName,
-        "link": `/achievement/file?url=${type}/${key}/${newfile}`,
-        // "link": `/achievement/file?url=${type}/${key}`,
-        "i18n": fileName,
-        "icon": icon,
-      }
-      children.push(node);
-    });
-    const menu = [{
-      "text": key,
-      "i18n": key,
-      "group": true,
-      "hideInBreadcrumb": true,
-      "children":children
-    }]
-
-    this.cache.set(key, menu)
-
-  }
 
 }
 
 
 
-interface MenuIn {
-  "text"?: string,
-  "objName"?: string,
-  "i18n"?:string,
-  "icon"?: {},
-  "children"?:any,
-  "data"?:{},
-  "link"?:string,
-  "externalLink"?:string,
-  "target"?:string,
-  "group"?: boolean,
-  "hideInBreadcrumb"?: boolean,
-  "pageAutherList"?:any,
-  "urlType"?:number
-}
 
 

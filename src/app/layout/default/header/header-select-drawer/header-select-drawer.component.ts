@@ -79,29 +79,43 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
     // const menuList = this.cache.getNone('menuList');
     // link 没有自菜单， 直接跳转
     console.log(item);
+    this.cache.set('menuName', item.title);
     if(item.link!==null && item.link){
-      console.log(item);
       this.router.navigateByUrl(item.link);
     }else {
       // readFile 读取文件获取菜单
       if(item.readFile!==null && item.readFile){
-        console.log(item.title);
         const menu:any[] = this.cache.getNone(item.title);
         console.log('=======readFile=',menu);
         this.menuService.add(menu);
+        this.getDefaultRoute(menu[0]);
       }else{
-        if(item.menu){
+        if(item.menu && item.children!==null){
+          console.log(item);
           this.menuService.add(item.children);
+          console.log(item.children[0].children[0].link);
+          this.router.navigateByUrl(item.children[0].children[0].link);
         }else{
           // window.open( item.path,'_blank');
         }
       }
-      this.router.navigateByUrl('/');
+      // this.router.navigateByUrl('/');
     }
 
   }
 
   ngAfterViewInit() {
+  }
+
+  getDefaultRoute(currentMenu:any){
+    console.log('currentMenu====',currentMenu);
+    console.log(currentMenu.link);
+
+    if(currentMenu.link){
+      this.router.navigateByUrl(currentMenu.link)
+    }else{
+      this.getDefaultRoute(currentMenu.children[0])
+    }
   }
 
 }

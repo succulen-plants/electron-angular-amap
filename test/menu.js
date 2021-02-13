@@ -1,22 +1,28 @@
-/**
- * 读取文件， 并获取目录
- */
 const fs = require('fs');
 
-let directorysObj;
 function readDirectory() {
-  // console.log(`${__dirname}`);
   const directorys = [
-    {name:'基岩时程', type:'txt'},
-    {name:'地质纵剖面图', type:'img'},
+    {name:'基岩时程', type:'txt', menu:{}},
+    // {name:'地质纵剖面图', type:'img', menu:{}},
+    // {name:'钻孔柱状图', type:'img', menu:{}},
+    // {name:'Amax区划图', type:'img', menu:{}},
   ];
-  directorys.forEach(item=>{
+  directorys.forEach((item, index)=>{
     const path = `${__dirname}/src/assets/${item.type}/${item.name}`;
-    directorysObj = readFile(path, item.name, item.type);
-    console.log('====directorysObj===',directorysObj);
+    const directorysObj = readFile(path, item.name, item.type);
+    directorys[index].menu = directorysObj;
   });
 
 }
+
+/**
+ *
+ * @param path： 文件路径
+ * @param name： 文件名称
+ * @param type： 文件类型
+ * @param relativePath: 文件内的相对路径
+ * @returns {{text: *, i18n: *, children: Array}}
+ */
 
 function readFile(path, name, type){
   const menu= {
@@ -33,20 +39,26 @@ function readFile(path, name, type){
   menu.children = files.map(file=>{
     const fileType =  inspectAndDescribeFile(`${path}/${file}`);
     if(fileType !== 'file'){
-      return readFile(`${path}/${file}`, file);
+      // relativePath = `${relativePath}/${file}`;
+      return readFile(`${path}/${file}`, file, type);
     }else {
       let icon = '';
+      let link = '';
       if(type === 'img'){
         icon = "anticon-picture";
+        link = '/achievement/file';
       }else if(type==='txt') {
         icon = "anticon-file-text";
+        link = '/txt';
       }
       const newfile = file.replace(/%/, "%25");
       const index = file.lastIndexOf('.');
       const fileName = file.substr(0, index);
+      const relativePathindex = path.indexOf('txt');
+     const  relativePath = path.substr(relativePathindex+4);
       const node = {
         "text": fileName,
-        "link": `/achievement/file?url=${type}/${newfile}`,
+        "link": `${link}?url=${type}/${relativePath}/${newfile}`,
         "i18n": fileName,
         icon,
       }
@@ -55,8 +67,6 @@ function readFile(path, name, type){
   })
   return menu;
 }
-
-
 
 /**
  * 判断路径是文件还是文件夹
@@ -76,5 +86,6 @@ function inspectAndDescribeFile(filePath) {
 
   return type;
 }
+
 
 readDirectory();
