@@ -7,11 +7,11 @@ import {environment} from "@env/environment";
 import {STColumn, STComponent, STData, STPage} from "@delon/abc/st";
 
 @Component({
-  selector: 'app-achievement',
-  templateUrl: './txt.component.html',
-  styleUrls: ['./txt.component.less'],
+  selector: 'app-drill-list',
+  templateUrl: './drill-list.component.html',
+  styleUrls: ['./drill-list.component.less'],
 })
-export class TxtComponent implements OnInit, OnDestroy {
+export class DrillListComponent implements OnInit, OnDestroy {
 
 
   renderData = {
@@ -30,25 +30,25 @@ export class TxtComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute
   ) {
     this._electronService.ipcRenderer.on('read-txt-reply', (event, data)=>{
-      console.log('ipcRenderer===txt====',data);
+      console.log('ipcRenderer====drill===',data);
       if(data){
         this.data = data.data;
         this.renderData.isSpinning = false;
       }
     });
   }
-
   data: STData[] = [];
   @ViewChild('st', { static: false }) private st: STComponent;
   columns: STColumn[] = [
-    { title: '时间', index: 'time' },
-    { title: '加速度', index: 'acceleration' },
+    { title: '钻孔编号', index: 'num' },
+    { title: '纬度(°)', index: 'longitude' },
+    { title: '经度(°)', index: 'latitude' },
      ];
 
 
   ngOnInit(): void {
-    console.log('AchievementComponent====');
     this.renderData.isSpinning = true;
+    console.log('AchievementComponent====');
     this.activatedRoute.url.subscribe(url => {
       console.log('url====',url);
         this.activatedRoute.queryParams.subscribe(queryParams => {

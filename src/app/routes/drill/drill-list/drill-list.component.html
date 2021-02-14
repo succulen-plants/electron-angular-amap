@@ -5,10 +5,8 @@
   <div class="content">
     <nz-card [nzBordered]="false">
       <nz-spin [nzSpinning]="renderData.isSpinning">
-        <div class="table"><st [data]="data" [columns]="columns" size="small" bordered="true" ps="15"></st></div>
-        <div class="charts"><app-charts [data]="data"></app-charts></div>
+        <st [data]="data" [columns]="columns" size="small" bordered="true" ps="15"></st>
       </nz-spin>
-
     </nz-card>
   </div>
 </div>

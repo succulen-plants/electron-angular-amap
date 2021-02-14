@@ -25,6 +25,7 @@ const routes: Routes = [
       // { path: 'amap', component: AmapComponent },
       { path: 'achievement', loadChildren: () => import('./achievement/achievement.module').then(m => m.AchievementModule) },
       { path: 'txt', loadChildren: () => import('./txt/txt.module').then(m => m.TxtModule) },
+      { path: 'drill', loadChildren: () => import('./drill/drill.module').then(m => m.DrillModule) },
       // { path: 'echarts', loadChildren: () => import('./charts/charts.module').then(m => m.ChartsModule) },
       // Exception
       // { path: 'exception', loadChildren: () => import('./routes/exception/exception.module').then(m => m.ExceptionModule) },

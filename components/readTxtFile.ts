@@ -7,22 +7,40 @@ import * as fs from "fs";
 
 export function asyncReadtxtFile(path){
   ipcMain.on('read-txt-file', (event, arg)=> {
+    let argType = '';
     console.log('ipcMain=====',arg);
+    if(arg.indexOf('钻孔坐标')!==-1){
+      argType = 'drill';
+    }else {
+      argType = '';
+    }
     asyncReadFile(`${path}/${arg}`).then(function (data) {
       let dataList = [];
       const dataString = data.toString();
       const dataArray = dataString.split(/[(\r\n)\r\n]+/);
-      dataArray.forEach(item=>{
+      dataArray.forEach((item, index)=>{
         // item.split(str.trim().split(/\s+/))
         // 解析每行内容， 以空格分割
         const array = item.trim().split(/\s+/);
-        const node = {
-          'time':array[0],
-          'acceleration':array[1]
+        if(argType === 'drill'){
+          if(Number(array[0])){
+            const node = {
+              'num':array[2],
+              'longitude':array[0],
+              'latitude':array[1]
+            }
+            dataList.push(node);
+          }
+        }else{
+          const node = {
+            'time':array[0],
+            'acceleration':array[1]
+          }
+          if(array[0]!=='0' && parseFloat(array[1])!== 0){
+            dataList.push(node);
+          }
         }
-        if(array[0]!=='0' && parseFloat(array[1])!== 0){
-          dataList.push(node);
-        }
+
       });
       event.sender.send('read-txt-reply', {data:dataList});
     });

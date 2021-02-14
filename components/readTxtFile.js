@@ -44,21 +44,40 @@ var electron_1 = require("electron");
 var fs = require("fs");
 function asyncReadtxtFile(path) {
     electron_1.ipcMain.on('read-txt-file', function (event, arg) {
+        var argType = '';
         console.log('ipcMain=====', arg);
+        if (arg.indexOf('钻孔坐标') > 0) {
+            argType = 'drill';
+        }
+        else {
+            argType = '';
+        }
         asyncReadFile(path + "/" + arg).then(function (data) {
             var dataList = [];
             var dataString = data.toString();
             var dataArray = dataString.split(/[(\r\n)\r\n]+/);
-            dataArray.forEach(function (item) {
+            dataArray.forEach(function (item, index) {
                 // item.split(str.trim().split(/\s+/))
                 // 解析每行内容， 以空格分割
                 var array = item.trim().split(/\s+/);
-                var node = {
-                    'time': array[0],
-                    'acceleration': array[1]
-                };
-                if (array[0] !== '0' && parseFloat(array[1]) !== 0) {
-                    dataList.push(node);
+                if (argType === 'drill') {
+                    if (Number(array[0])) {
+                        var node = {
+                            'num': array[2],
+                            'longitude': array[0],
+                            'latitude': array[1]
+                        };
+                        dataList.push(node);
+                    }
+                }
+                else {
+                    var node = {
+                        'time': array[0],
+                        'acceleration': array[1]
+                    };
+                    if (array[0] !== '0' && parseFloat(array[1]) !== 0) {
+                        dataList.push(node);
+                    }
                 }
             });
             event.sender.send('read-txt-reply', { data: dataList });
