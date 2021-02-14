@@ -43,6 +43,9 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     modalVisible: false,
     // 选点信息
     selectedPoint: null,
+    // 选择区域
+    selectPolyStatus: false,
+
   }
 
 
@@ -141,6 +144,20 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
     this.cdr.detectChanges();
   }
+
+  //开启选择区功能
+  openSelectPoly(){
+    if(!this.renderData.selectPolyStatus){
+
+    }else {
+      // this.renderData.rangingTool.close(true);
+    }
+    this.renderData.selectPolyStatus = !this.renderData.selectPolyStatus;
+
+    this.cdr.detectChanges();
+  }
+  // 保存选区
+  saveSelectPoly(){}
 
   // 添加多边形区域
   addPolygon(){

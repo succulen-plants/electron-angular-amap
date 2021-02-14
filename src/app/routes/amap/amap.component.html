@@ -18,15 +18,18 @@
       <div class="name">测距</div>
     </a>
   </div>
-  <!--<div class="button-node">-->
-    <!--<a class="item"  (click)="changeOverlayGroup()" [class.active]="renderData.overlayGroupStatus">-->
-    <!--<span class="icon">-->
-      <!--<i *ngIf="renderData.overlayGroupStatus" nz-icon nzType="eye" [nzTheme]="'fill'"></i>-->
-      <!--<i *ngIf="!renderData.overlayGroupStatus" nz-icon nzType="eye-invisible"[nzTheme]="'fill'"></i>-->
-    <!--</span>-->
-      <!--<span  class="name">钻孔</span>-->
-    <!--</a>-->
-  <!--</div>-->
+  <div class="button-node">
+    <a class="item"  (click)="openSelectPoly()" [class.active]="renderData.selectPolyStatus">
+      <div class="customIcon selectPoly" [class.active]="renderData.selectPolyStatus"></div>
+      <div class="name">选区</div>
+    </a>
+  </div>
+  <div class="button-node" *ngIf="renderData.selectPolyStatus">
+    <a class="item"  (click)="saveSelectPoly()" >
+      <div class="customIcon saveSelectPoly"></div>
+      <div class="name">保存选区</div>
+    </a>
+  </div>
 
   <div class="button-node">
     <a class="item"  (click)="changeOverlayGroup()" [class.active]="renderData.overlayGroupStatus">
