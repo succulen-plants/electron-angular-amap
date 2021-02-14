@@ -21,73 +21,91 @@ export const achievementList = [
       navImg: `${baseImgUrl}/icons/地震构造图.png`,
       "children": [
         {
-        "text": "地震构造图",
+          level: 1,
+        "title": "地震构造图",
         "i18n": "地震构造图",
-        "group": true,
-        "hideInBreadcrumb": true,
+          open: true,
+          selected: true,
+          disabled: false,
         "children":[
           {
-            "text": "区域地震构造图",
+            level: 2,
+            "title": "区域地震构造图",
             "link": "/achievement/dgz",
             "i18n": "区域地震构造图",
-            "icon": "anticon-block",
+            "icon": "block",
+            selected: true,
+            disabled: false,
           },
           {
-            "text": "区域大地构造分区图",
+            level: 2,
+            "title": "区域大地构造分区图",
             "link": "/achievement/qdgz",
             "i18n": "区域大地构造分区图",
-            "icon": "anticon-appstore",
+            "icon": "appstore",
+
           },
           {
-            "text": "区域大地构造分区图",
+            level: 2,
+            "title": "区域大地构造分区图",
             "link": "/achievement/jqdgz",
             "i18n": "近场区地震地质构造图",
-            "icon": "anticon-borderless-table",
+            "icon": "borderless-table",
+
           },
           {
-            "text": "区域大地构造分区图",
+            level: 2,
+            "title": "区域大地构造分区图",
             "link": "/achievement/jqxdh",
             "i18n": "近场区新构造单元划分图",
-            "icon": "anticon-build",
+            "icon": "build",
+            disabled: false,
           },
           {
-            "text": "区域大地构造分区图",
+            level: 2,
+            "title": "区域大地构造分区图",
             "link": "/achievement/qxgz",
             "i18n": "区域新单元构造分区图",
-            "icon": "anticon-appstore-add",
+            "icon": "appstore-add",
+            disabled: false,
           },
         ]
       }]
     },
       {
         title: '震中分布图',
-        // path: `${mgtOrigin}/iotPlant/#/home?quickstart=632`\
         menu: 'menu.manage',
         auth: 'haveAuth',
         navImg: `${baseImgUrl}/icons/震中分布图.png`,
         "children": [{
-          "text": "震中分布图",
+          level: 1,
+          title: "震中分布图",
           "i18n": "震中分布图",
-          "group": true,
-          "hideInBreadcrumb": true,
+          open: true,
+          selected: true,
+          disabled: false,
           "children":[
             {
-              "text": "区域历史地震震中分布图",
+              level: 2,
+              title: "区域历史地震震中分布图",
               "link": "/achievement/qlzzf",
               "i18n": "区域历史地震震中分布图",
-              "icon": "anticon-border-bottom",
+              "icon": "border-bottom",
+              selected: true,
             },
             {
-              "text": "区域现代地震震中分布图",
+              level: 2,
+              title: "区域现代地震震中分布图",
               "link": "/achievement/qxzzf",
               "i18n": "区域现代地震震中分布图",
-              "icon": "anticon-border-outer",
+              "icon": "border-outer",
             },
             {
-              "text": "近场区地震震中分布图",
+              level: 2,
+              title: "近场区地震震中分布图",
               "link": "/achievement/jzzf",
               "i18n": "近场区地震震中分布图",
-              "icon": "anticon-border-inner",
+              "icon": "border-inner",
             }
           ]
         }]
@@ -126,58 +144,58 @@ export const achievementList = [
       auth: 'haveAuth',
       navImg: `${baseImgUrl}/icons/钻孔资料.png`,
       "children": [{
-        "text": "钻孔资料",
+        title: "钻孔资料",
         "i18n": "钻孔资料",
         "group": true,
         "hideInBreadcrumb": true,
         "children":[
           {
-            "text": "钻孔坐标",
+            title: "钻孔坐标",
             "link": "/dashboard/v1",
             "i18n": "钻孔坐标",
-            "icon": "anticon-border-bottom",
+            "icon": "border-bottom",
           },
           {
-            "text": "土工试验成果表",
+            title: "土工试验成果表",
             "link": "/dashboard/analysis",
             "i18n": "土工试验成果表",
-            "icon": "anticon-border-outer",
+            "icon": "border-outer",
           },
           {
-            "text": "液化钻孔成果表",
+            title: "液化钻孔成果表",
             "link": "/dashboard/analysis",
             "i18n": "液化钻孔成果表",
-            "icon": "anticon-border-inner",
+            "icon": "border-inner",
           },
           {
-            "text": "勘探点平面图",
+            title: "勘探点平面图",
             "link": "/dashboard/analysis",
             "i18n": "勘探点平面图",
-            "icon": "anticon-border-inner",
+            "icon": "border-inner",
           },
           {
-            "text": "等效剪切波速和场地类别",
+            title: "等效剪切波速和场地类别",
             "link": "/dashboard/analysis",
             "i18n": "勘探点平面图",
-            "icon": "anticon-border-inner",
+            "icon": "border-inner",
           },
           {
-            "text": "岩土分层信息",
+            title: "岩土分层信息",
             "link": "/dashboard/analysis",
             "i18n": "岩土分层信息",
-            "icon": "anticon-border-inner",
+            "icon": "border-inner",
           },
           {
-            "text": "物理力学性质指标",
+            title: "物理力学性质指标",
             "link": "/dashboard/analysis",
             "i18n": "物理力学性质指标",
-            "icon": "anticon-border-inner",
+            "icon": "border-inner",
           },
           {
-            "text": "动力学参数",
+            title: "动力学参数",
             "link": "/dashboard/analysis",
             "i18n": "动力学参数",
-            "icon": "anticon-border-inner",
+            "icon": "border-inner",
           },
         ]
       }]
@@ -188,28 +206,28 @@ export const achievementList = [
     auth: 'haveAuth',
       navImg: `${baseImgUrl}/icons/土层计算模型.png`,
     "children": [{
-    "text": "震中分布图",
+    title: "震中分布图",
     "i18n": "震中分布图",
     "group": true,
     "hideInBreadcrumb": true,
     "children":[
       {
-        "text": "区域历史地震震中分布图",
+        title: "区域历史地震震中分布图",
         "link": "/dashboard/v1",
         "i18n": "区域历史地震震中分布图",
-        "icon": "anticon-border-bottom",
+        "icon": "border-bottom",
       },
       {
-        "text": "区域现代地震震中分布图",
+        title: "区域现代地震震中分布图",
         "link": "/dashboard/analysis",
         "i18n": "区域现代地震震中分布图",
-        "icon": "anticon-border-outer",
+        "icon": "border-outer",
       },
       {
-        "text": "近场区地震震中分布图",
+        title: "近场区地震震中分布图",
         "link": "/dashboard/analysis",
         "i18n": "近场区地震震中分布图",
-        "icon": "anticon-border-inner",
+        "icon": "border-inner",
       }
     ]
   }]
@@ -224,22 +242,22 @@ export const achievementList = [
       auth: 'haveAuth',
       navImg: `${baseImgUrl}/icons/地震动参数成果表.png`,
       "children": [{
-        "text": "地震动参数成果表",
+        title: "地震动参数成果表",
         "i18n": "地震动参数成果表",
         "group": true,
         "hideInBreadcrumb": true,
         "children":[
           {
-            "text": "基岩地震动参数成果表",
+            title: "基岩地震动参数成果表",
             "link": "/dashboard/v1",
             "i18n": "区域历史地震震中分布图",
-            "icon": "anticon-border-bottom",
+            "icon": "border-bottom",
           },
           {
-            "text": "地表地震动参数成果表",
+            title: "地表地震动参数成果表",
             "link": "/dashboard/analysis",
             "i18n": "区域现代地震震中分布图",
-            "icon": "anticon-border-outer",
+            "icon": "border-outer",
           }
         ]
       }]
@@ -283,7 +301,7 @@ export const parameterList = [
       auth: 'haveAuth',
         navImg: `${baseImgUrl}/icons/查询报告.png`,
       "children": [{
-        "text": "震中分布图",
+        title: "震中分布图",
         "i18n": "震中分布图",
         "group": true,
         "hideInBreadcrumb": true,

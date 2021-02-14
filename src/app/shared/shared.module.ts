@@ -19,6 +19,7 @@ import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 // #region third libs
 import { CountdownModule } from 'ngx-countdown';
 import {HeaderSelectDrawerComponent} from "../layout/default/header/header-select-drawer/header-select-drawer.component";
+import { DataCommunicateService} from "../service/data-communicate.service";
 
 
 const THIRDMODULES = [CountdownModule];
@@ -42,6 +43,7 @@ const DIRECTIVES = [];
     // third libs
     ...THIRDMODULES,
   ],
+  providers:[DataCommunicateService],
   declarations: [
     // your components
     WebviewDirective,

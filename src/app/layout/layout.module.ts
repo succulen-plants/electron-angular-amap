@@ -20,6 +20,7 @@ const COMPONENTS = [
   HeaderStorageComponent,
   HeaderComponent,
   SidebarComponent,
+  NzDemoMenuRecursiveComponent,
   ...SETTINGDRAWER,
 ];
 
@@ -33,6 +34,7 @@ import {HeaderLogoComponent} from "./default/header/components/logo.component";
 import {LayoutNomenuComponent} from "./noMenu/nomenu.component";
 import {LayoutPassportComponent} from "./passport/passport.component";
 import {HeaderStorageComponent} from "./default/header/components/storage.component";
+import {NzDemoMenuRecursiveComponent} from "./default/menu/menu.component";
 const PASSPORT = [LayoutPassportComponent];
 
 @NgModule({

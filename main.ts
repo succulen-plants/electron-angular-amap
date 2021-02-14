@@ -4,6 +4,7 @@ import * as url from 'url';
 import * as fs from 'fs';
 
 import {asyncReadtxtFile} from './components/readTxtFile';
+import {readDirectory} from './components/menu';
 
 // 窗口
 let win: BrowserWindow = null;
@@ -12,7 +13,8 @@ const imgFileObj ={};
 let txtFileObj:any;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
-
+// 目录菜单
+let directorys:any;
 function createWindow(): BrowserWindow {
 
   console.log('=========createWindow');
@@ -73,7 +75,7 @@ try {
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
-    readDirectory();
+    directorys = readDirectory(__dirname);
     setTimeout(createWindow, 400);
   });
 
@@ -116,26 +118,26 @@ ipcMain.on('read-file-directorys', function(event, arg) {
 /**
  * 获取文件目录， 并创建服务菜单
  */
-let   directorys = [
-  {name:'基岩时程', type:'txt', menu:{}},
-  {name:'地质纵剖面图', type:'img', menu:{}},
-  {name:'钻孔柱状图', type:'img', menu:{}},
-  {name:'Amax区划图', type:'img', menu:{}},
-];
-function readDirectory() {
-  directorys = [
-    {name:'基岩时程', type:'txt', menu:{}},
-    {name:'地质纵剖面图', type:'img', menu:{}},
-    {name:'钻孔柱状图', type:'img', menu:{}},
-    {name:'Amax区划图', type:'img', menu:{}},
-  ];
-  directorys.forEach((item, index)=>{
-    const path = `${__dirname}/src/assets/${item.type}/${item.name}`;
-    const directorysObj = readFile(path, item.name, item.type, );
-    directorys[index].menu = directorysObj;
-  });
-
-}
+// let   directorys = [
+//   {name:'基岩时程', type:'txt', menu:{}},
+//   {name:'地质纵剖面图', type:'img', menu:{}},
+//   {name:'钻孔柱状图', type:'img', menu:{}},
+//   {name:'Amax区划图', type:'img', menu:{}},
+// ];
+// function readDirectory() {
+//   directorys = [
+//     {name:'基岩时程', type:'txt', menu:{}},
+//     {name:'地质纵剖面图', type:'img', menu:{}},
+//     {name:'钻孔柱状图', type:'img', menu:{}},
+//     {name:'Amax区划图', type:'img', menu:{}},
+//   ];
+//   directorys.forEach((item, index)=>{
+//     const path = `${__dirname}/src/assets/${item.type}/${item.name}`;
+//     const directorysObj = readFile(path, item.name, item.type, );
+//     directorys[index].menu = directorysObj;
+//   });
+//
+// }
 
 /**
  *

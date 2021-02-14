@@ -16,6 +16,7 @@ import {ICONS_AUTO} from "../../../../../style-icons-auto";
 import {ICONS} from "../../../../../style-icons";
 import {NzIconService} from "ng-zorro-antd/icon";
 import {ElectronService} from "ngx-electron";
+import {DataCommunicateService} from "../../../../service/data-communicate.service";
 
 @Component({
   selector: 'header-select-drawer',
@@ -45,6 +46,7 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
               private http: HttpClient,
               private menuService: MenuService,
               iconSrv: NzIconService,
+              private dataCommunicateService: DataCommunicateService,
               private router: Router) {
     iconSrv.addIcon(...ICONS_AUTO, ...ICONS);
 
@@ -87,13 +89,20 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
       if(item.readFile!==null && item.readFile){
         const menu:any[] = this.cache.getNone(item.title);
         console.log('=======readFile=',menu);
-        this.menuService.add(menu);
+        // this.menuService.add(menu);
+        this.dataCommunicateService.emitData({
+          target: 'NzDemoMenuRecursiveComponent',
+          value: menu ,
+        });
         this.getDefaultRoute(menu[0]);
       }else{
         if(item.menu && item.children!==null){
           console.log(item);
-          this.menuService.add(item.children);
-          console.log(item.children[0].children[0].link);
+          // this.menuService.add(item.children);
+          this.dataCommunicateService.emitData({
+            target: 'NzDemoMenuRecursiveComponent',
+            value: item.children ,
+          });
           this.router.navigateByUrl(item.children[0].children[0].link);
         }else{
           // window.open( item.path,'_blank');
