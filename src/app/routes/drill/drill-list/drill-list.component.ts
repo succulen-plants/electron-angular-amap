@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { ElectronService} from 'ngx-electron';
 import {environment} from "@env/environment";
 import {STColumn, STComponent, STData, STPage} from "@delon/abc/st";
+import {CacheService} from "@delon/cache";
 
 @Component({
   selector: 'app-drill-list',
@@ -27,12 +28,14 @@ export class DrillListComponent implements OnInit, OnDestroy {
   };
   constructor(
     private _electronService: ElectronService,
+    public cache: CacheService,
     private activatedRoute: ActivatedRoute
   ) {
     this._electronService.ipcRenderer.on('read-txt-reply', (event, data)=>{
       console.log('ipcRenderer====drill===',data);
       if(data){
         this.data = data.data;
+        this.cache.set('drill-list', data.data)
         this.renderData.isSpinning = false;
       }
     });

@@ -12,7 +12,9 @@ import { SFSchema, SFComponent } from '@delon/form';
 import {environment} from "@env/environment";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {NzModalService} from "ng-zorro-antd/modal";
+import {CacheService} from "@delon/cache";
 declare var AMap: any
+
 
 
 @Component({
@@ -32,7 +34,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     toolBar: null,
     mapType: null,
     // 工具类展示
-    rangingTool:null,
+    mouseTool:null,
     openRangingStatus: false,
     // overlayGroups 钻孔组
     overlayGroups:null,
@@ -45,6 +47,9 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     selectedPoint: null,
     // 选择区域
     selectPolyStatus: false,
+    // 鼠标工具，区域选区
+    overlays:null,
+    polygonPath:null,
 
   }
 
@@ -74,6 +79,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
   constructor(    private cdr: ChangeDetectorRef,
                   public message: NzMessageService,
                   private modal: NzModalService,
+                  public cache: CacheService,
   ){}
 
   ngOnInit(): void {
@@ -98,7 +104,6 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     // });
   }
 
-
   ngOnDestroy() {
   }
 
@@ -106,7 +111,8 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     this.renderData.amap = new AMap.Map('map',{
       // center: [116.400274, 39.905812],
       center: [113.7177,34.6867],
-      zoom: 15
+      zoom: 14,
+      mapStyle: 'amap://styles/28401ee6adcafe9e91827e599428632a'
       // pitch: 70,
       // viewMode: '3D',
     });
@@ -117,8 +123,11 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
       showRoad: false,
       showTraffic: false,
     });
+
+
+
     // this.renderData.mapType.hide();
-    this.renderData.rangingTool = new AMap.MouseTool(this.renderData.amap);
+    this.renderData.mouseTool = new AMap.MouseTool(this.renderData.amap);
     this.renderData.amap.addControl(this.renderData.sacle);
     this.renderData.amap.addControl(this.renderData.toolBar);
     this.renderData.amap.addControl(this.renderData.mapType);
@@ -126,57 +135,90 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
 
     // 添加覆盖区域
-    this.addPolygon();
+    // this.addPolygon();
 
 
   }
 
   // 开启测距功能
   openRanging(){
-    console.log(this.renderData.openRangingStatus);
-    if(!this.renderData.openRangingStatus){
-      this.renderData.rangingTool.rule({
-        //同 RangingTool 的 自定义 设置，缺省为默认样式
-      });
-    }else {
-      this.renderData.rangingTool.close(true);
-    }
-    this.renderData.openRangingStatus = !this.renderData.openRangingStatus;
-
-    this.cdr.detectChanges();
+    // console.log(this.renderData.openRangingStatus);
+    // if(!this.renderData.openRangingStatus){
+    //   this.renderData.rangingTool.rule({
+    //     //同 RangingTool 的 自定义 设置，缺省为默认样式
+    //   });
+    // }else {
+    //   this.renderData.rangingTool.close(true);
+    // }
+    // this.renderData.openRangingStatus = !this.renderData.openRangingStatus;
+    //
+    // this.cdr.detectChanges();
   }
 
   //开启选择区功能
   openSelectPoly(){
+    // let mouseTool = new AMap.MouseTool(this.renderData.amap);
     if(!this.renderData.selectPolyStatus){
-
+      //监听draw事件可获取画好的覆盖物
+      this.renderData.mouseTool.on('draw',(e)=>{
+        console.log(e.obj.w.path);
+        // this.renderData.overlays.push(e.obj);
+        this.renderData.overlays = e.obj;;
+        // this.renderData.polygon = e.obj.w.path;;
+      })
+      this.renderData.mouseTool.polygon({
+        fillColor:'#00b0ff',
+        strokeColor:'#80d8ff'
+        //同Polygon的Option设置
+      });
     }else {
       // this.renderData.rangingTool.close(true);
+      this.renderData.mouseTool.close(true)
     }
     this.renderData.selectPolyStatus = !this.renderData.selectPolyStatus;
 
     this.cdr.detectChanges();
   }
   // 保存选区
-  saveSelectPoly(){}
+  saveSelectPoly(){
+    const path = this.renderData.overlays.w.path;
+    console.log(path);
+    const paths =[];
+    path.forEach((item:any)=>{
+      paths.push([item.lng, item.lat]);
+    })
+
+    this.renderData.selectPolyStatus = !this.renderData.selectPolyStatus;
+    this.renderData.mouseTool.close(true);
+    this.addPolygon(paths);
+    this.message.info('选区保存成功！')
+  }
 
   // 添加多边形区域
-  addPolygon(){
-    const path = [
-      [116.403322, 39.920255],
-      [116.410703, 39.897555],
-      [116.402292, 39.892353],
-      [116.389846, 39.891365]
-    ]
+  addPolygon(path){
+    // const path = [
+    //   [116.403322, 39.920255],
+    //   [116.410703, 39.897555],
+    //   [116.402292, 39.892353],
+    //   [116.389846, 39.891365]
+    // ]
+    console.log(this.renderData.polygonPath);
+    if(this.renderData.polygonPath!== null){
+      this.renderData.amap.remove(this.renderData.polygonPath)
+    }
 
+
+    // this.renderData.amap.remove(this.renderData)
     const polygon = new AMap.Polygon({
       path: path,
-      strokeColor: "#53b5fd",
+      strokeColor: "#4438fd",
       strokeWeight: 2,
       strokeOpacity: 1,
       fillOpacity: 0,
       zIndex: 50,
     });
+    this.renderData.polygonPath = polygon;
+
 
     this.renderData.amap.add(polygon)
 
@@ -185,21 +227,62 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
   // 显示钻孔
   _addOverlayGroup(){
-    var lnglats = [[116.39, 39.92], [116.41, 39.93], [116.43, 39.91], [116.46, 39.93]];
-    var markers = [];
-    for (var i = 0; i < lnglats.length; i++) {
-      var lnglat = lnglats[i];
-      // 创建点实例
-      var marker = new AMap.Marker({
-        position: new AMap.LngLat(lnglat[0], lnglat[1]),
-        icon: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b' + (i + 1) + '.png',
-        extData: {
-          id: i + 1
-        }
-      });
+    const drills:any[] = this.cache.getNone('drill-list');
+    if(!drills){}
+    var startIcon = new AMap.Icon({
+      // 图标尺寸
+      size: new AMap.Size(30, 30),
+      // 图标的取图地址
+      image: `${environment.baseUrl}/assets/icons/钻孔3.png`,
+      // 图标所用图片大小
+      imageSize: new AMap.Size(30, 30),
+      // 图标取图偏移量
+      // imageOffset: new AMap.Pixel(-9, -3)
+    });
 
-      markers.push(marker);
-    }
+
+    // text.setMap(map);
+    // var lnglats = [[116.39, 39.92], [116.41, 39.93], [116.43, 39.91], [116.46, 39.93]];
+    var markers = [];
+      drills.forEach(item=>{
+        // 创建点实例
+        var marker = new AMap.Marker({
+          position: new AMap.LngLat(item.latitude, item.longitude),
+          // icon: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b' + (i + 1) + '.png',
+          extData: {
+            // id: i + 1
+          },
+          icon: startIcon,
+          title: item.num
+        });
+
+        var text = new AMap.Text({
+          text:item.num,
+          anchor:'center', // 设置文本标记锚点
+          draggable:true,
+          cursor:'pointer',
+          // angle:10,
+          style:{
+            // 'padding': '.75rem 1.25rem',
+            // 'margin-bottom': '1rem',
+            // 'border-radius': '.25rem',
+            'background-color': 'rgba(0,0,0,0)',
+            // 'width': '15rem',
+            'border-width': 0,
+            // 'box-shadow': '0 2px 6px 0 rgba(114, 124, 245, .5)',
+            'text-align': 'center',
+            'font-size': '10px',
+            'color': '#000'
+          },
+          position: [item.latitude, item.longitude],
+          // offset:new AMap.Pixel(8, -15),
+          zIndex:110
+        });
+        text.setMap(this.renderData.amap);
+        markers.push(marker);
+      })
+
+
     // 创建覆盖物群组，并将 marker 传给 OverlayGroup
     this.renderData.overlayGroups = new AMap.OverlayGroup(markers);
     this.renderData.amap.add(this.renderData.overlayGroups);
