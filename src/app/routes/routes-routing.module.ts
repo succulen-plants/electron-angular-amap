@@ -20,7 +20,7 @@ const routes: Routes = [
     path: '',
     component: LayoutDefaultComponent,
     children: [
-      { path: '', redirectTo: 'achievement', pathMatch: 'full' },
+      // { path: '', redirectTo: 'nomenu', pathMatch: 'full' },
       // { path: 'home', component: HomeComponent },
       // { path: 'amap', component: AmapComponent },
       { path: 'achievement', loadChildren: () => import('./achievement/achievement.module').then(m => m.AchievementModule) },

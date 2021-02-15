@@ -90,7 +90,7 @@ export class LoginComponent implements OnDestroy {
 
     if(this.userName.value === 'admin' && this.password.value==='123'){
       console.log('=====login');
-      this.router.navigateByUrl('/');
+      this.router.navigateByUrl('/nomenu');
     }else{
       this.error = '用户名或密码有误'
     }

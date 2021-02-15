@@ -104,8 +104,9 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
   ngAfterViewInit() {
     this.renderData.amap = new AMap.Map('map',{
-      center: [116.400274, 39.905812],
-      zoom: 14
+      // center: [116.400274, 39.905812],
+      center: [113.7177,34.6867],
+      zoom: 15
       // pitch: 70,
       // viewMode: '3D',
     });

@@ -1,6 +1,7 @@
-import {Component, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, AfterViewInit} from '@angular/core';
 import {DataCommunicateService} from "../../../service/data-communicate.service";
 import {Router} from "@angular/router";
+import {CacheService} from "@delon/cache";
 
 
 @Component({
@@ -10,7 +11,7 @@ import {Router} from "@angular/router";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class NzDemoMenuRecursiveComponent {
+export class NzDemoMenuRecursiveComponent implements AfterViewInit {
   mode = false;
   menus = [];
   data_emitter;
@@ -18,14 +19,37 @@ export class NzDemoMenuRecursiveComponent {
   constructor(    private dataCommunicateService: DataCommunicateService,
                   private router: Router,
                   private cdr: ChangeDetectorRef,
+                  public cache: CacheService,
   ){
+    console.log('====NzDemoMenuRecursiveComponent====');
     this.data_emitter = this.dataCommunicateService.getData().subscribe(data =>{
+      console.log('data',data);
       if(data.target === 'NzDemoMenuRecursiveComponent'){
-        console.log(data);
+
         this.menus = data.value;
+        console.log(this.menus);
+        const oldmenu = this.cache.getNone('menu');
+        console.log('oldmenu====', !oldmenu);
+        if(!oldmenu){
+          this.cache.set('menu', this.menus);
+        }else if( oldmenu[0].title !== this.menus[0].title){
+          this.cache.set('menu', this.menus);
+        }
         this.cdr.detectChanges();
       }
     });
+  }
+
+  ngAfterViewInit() {
+    console.log(this.menus === []);
+    if(this.menus.length === 0){
+      this.menus = this.cache.getNone('menu');
+      console.log(this.menus);
+      // this.cache.remove('menu');
+      this.cdr.detectChanges();
+    }
+
+
   }
 
   click(menu){

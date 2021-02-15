@@ -94,15 +94,17 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
           target: 'NzDemoMenuRecursiveComponent',
           value: menu ,
         });
+        // this.cache.set('menu', menus)
         this.getDefaultRoute(menu[0]);
       }else{
         if(item.menu && item.children!==null){
-          console.log(item);
+          console.log('have====',item);
           // this.menuService.add(item.children);
           this.dataCommunicateService.emitData({
             target: 'NzDemoMenuRecursiveComponent',
             value: item.children ,
           });
+          // this.cache.set('menu', item.children)
           this.router.navigateByUrl(item.children[0].children[0].link);
         }else{
           // window.open( item.path,'_blank');

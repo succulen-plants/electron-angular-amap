@@ -46,7 +46,7 @@ function asyncReadtxtFile(path) {
     electron_1.ipcMain.on('read-txt-file', function (event, arg) {
         var argType = '';
         console.log('ipcMain=====', arg);
-        if (arg.indexOf('钻孔坐标') > 0) {
+        if (arg.indexOf('钻孔坐标') !== -1) {
             argType = 'drill';
         }
         else {
