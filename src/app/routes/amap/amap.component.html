@@ -1,68 +1,67 @@
-<div id="map" ></div>
-
-<div class="button-list">
-  <!--<a [class]="renderData.mapTypeClass" (click)="changeMayType()">-->
+<!--<nz-spin [nzSpinning]="renderData.isSpinning">-->
+  <div id="map" ></div>
+  <div class="button-list">
+    <!--<a [class]="renderData.mapTypeClass" (click)="changeMayType()">-->
     <!--<span class="icon"> <i nz-icon nzType="aim" nzTheme="outline"></i></span>-->
     <!--<span class="name">卫星</span>-->
-  <!--</a>-->
-  <!--<div class="button-node">-->
-    <!--<a class="item"  (click)="openRanging()" [class.active]="renderData.openRangingStatus">-->
-      <!--<span class="icon"><i nz-icon nzType="column-width" [nzTheme]="'outline'"></i></span>-->
-      <!--<span  class="name">测距</span>-->
     <!--</a>-->
-  <!--</div>-->
-
-  <!--<div class="button-node">-->
+    <!--<div class="button-node">-->
     <!--<a class="item"  (click)="openRanging()" [class.active]="renderData.openRangingStatus">-->
-      <!--<div class="customIcon ranging" [class.active]="renderData.openRangingStatus"></div>-->
-      <!--<div class="name">测距</div>-->
+    <!--<span class="icon"><i nz-icon nzType="column-width" [nzTheme]="'outline'"></i></span>-->
+    <!--<span  class="name">测距</span>-->
     <!--</a>-->
-  <!--</div>-->
-  <div class="button-node">
-    <a class="item"  (click)="openSelectPoly()" [class.active]="renderData.selectPolyStatus">
-      <div class="customIcon selectPoly" [class.active]="renderData.selectPolyStatus"></div>
-      <div class="name">选区</div>
-    </a>
-  </div>
-  <div class="button-node" *ngIf="renderData.selectPolyStatus">
-    <a class="item"  (click)="saveSelectPoly()" >
-      <div class="customIcon saveSelectPoly"></div>
-      <div class="name">保存选区</div>
-    </a>
-  </div>
+    <!--</div>-->
 
-  <div class="button-node">
-    <a class="item"  (click)="changeOverlayGroup()" [class.active]="renderData.overlayGroupStatus">
-      <div class="customIcon overlayGroup" [class.active]="renderData.overlayGroupStatus"></div>
-      <div class="name">钻孔</div>
-    </a>
-  </div>
+    <!--<div class="button-node">-->
+    <!--<a class="item"  (click)="openRanging()" [class.active]="renderData.openRangingStatus">-->
+    <!--<div class="customIcon ranging" [class.active]="renderData.openRangingStatus"></div>-->
+    <!--<div class="name">测距</div>-->
+    <!--</a>-->
+    <!--</div>-->
+    <div class="button-node">
+      <a class="item"  (click)="openSelectPoly()" [class.active]="renderData.selectPolyStatus">
+        <div class="customIcon selectPoly" [class.active]="renderData.selectPolyStatus"></div>
+        <div class="name">选区</div>
+      </a>
+    </div>
+    <div class="button-node" *ngIf="renderData.selectPolyStatus">
+      <a class="item"  (click)="saveSelectPoly()" >
+        <div class="customIcon saveSelectPoly"></div>
+        <div class="name">保存选区</div>
+      </a>
+    </div>
 
-  <div class="button-node">
-    <a class="item"  (click)="changeClickShow()" [class.active]="renderData.clickShow">
-      <!--<span  class="name"><img class="customIcon" src="./assets/icons/图上选点.png">图上选点</span>-->
-      <div class="customIcon selectedPoint" [class.active]="renderData.clickShow"></div><div class="name">图上选点</div>
-    </a>
-  </div>
-  <div class="button-node">
-    <a class="item"  (click)="changeClickShow()" [class.active]="renderData.clickShow">
-    <span class="icon">
-      <!--<i *ngIf="renderData.overlayGroupStatus" nz-icon nzType="eye" [nzTheme]="'fill'"></i>-->
-      <!--<i *ngIf="!renderData.overlayGroupStatus" nz-icon nzType="eye-invisible"[nzTheme]="'fill'"></i>-->
-    </span>
-      <span  class="name"><img class="customIcon" src="./assets/icons/参数计算.png">参数计算</span>
-    </a>
-  </div>
-  <div class="button-node">
-    <a class="item"  (click)="clearResult()" [class.active]="renderData.clickShow">
+    <div class="button-node">
+      <a class="item"  (click)="changeOverlayGroup()" [class.active]="renderData.overlayGroupStatus">
+        <div class="customIcon overlayGroup" [class.active]="renderData.overlayGroupStatus"></div>
+        <div class="name">钻孔</div>
+      </a>
+    </div>
+
+    <div class="button-node">
+      <a class="item"  (click)="changeClickShow()" [class.active]="renderData.clickShow">
+        <!--<span  class="name"><img class="customIcon" src="./assets/icons/图上选点.png">图上选点</span>-->
+        <div class="customIcon selectedPoint" [class.active]="renderData.clickShow"></div><div class="name">图上选点</div>
+      </a>
+    </div>
+    <div class="button-node">
+      <a class="item"  (click)="calculate()" [class.active]="renderData.calculateShow">
+        <div class="customIcon calculate" [class.active]="renderData.calculateShow"></div><div class="name">参数计算</div>
+        <!--<span  class="name calculate"><img class="customIcon" src="./assets/icons/参数计算.png">参数计算</span>-->
+      </a>
+    </div>
+    <div class="button-node">
+      <a class="item"  (click)="clearResult()" [class.active]="renderData.clickShow">
     <span class="icon">
     </span>
-      <span  class="name"><img class="customIcon" src="./assets/icons/清除结果.png">清除结果</span>
-    </a>
+        <span  class="name"><img class="customIcon" src="./assets/icons/清除结果.png">清除结果</span>
+      </a>
+    </div>
+
+
   </div>
+<!--</nz-spin>-->
 
-
-</div>
 
 
 
@@ -83,6 +82,10 @@
         <button [nzType]="'primary'" type="submit" nz-button [disabled]="!sf.valid">选点</button>
       </sf>
     </div>
+  <div class="header">参数计算</div>
+  <div class="body">
+
+  </div>
 </div>
 
 

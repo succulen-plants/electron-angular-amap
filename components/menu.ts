@@ -7,6 +7,8 @@ import * as fs from "fs";
 let count = 0;
 let open = false;
 let level = 1;
+// const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src';
+const recPath = 'D:\\ll\\';
 export  function readDirectory(dirname) {
   let directorys = [
     {name:'基岩时程', type:'txt', menu:{}},
@@ -17,7 +19,10 @@ export  function readDirectory(dirname) {
   directorys.forEach((item, index)=>{
     count = 0;
     level = 1;
-    const path = `${dirname}/src/assets/${item.type}/${item.name}`;
+    // const path = `${dirname}/src/assets/${item.type}/${item.name}`;
+    // const path = `${recPath}/assets/${item.type}/${item.name}`;
+    const path = `${recPath}${item.type}\\${item.name}`;
+    console.log('menu  path===',path);
     const directorysObj = readFile(path, item.name, item.type);
     directorys[index].menu = directorysObj;
     console.log(directorysObj);
@@ -64,10 +69,12 @@ function readFile(path, name, type){
       count++;
       open = false;
     }
-    const fileType =  inspectAndDescribeFile(`${path}/${file}`);
+    // const fileType =  inspectAndDescribeFile(`${path}/${file}`);
+    const fileType =  inspectAndDescribeFile(`${path}\\${file}`);
     if(fileType !== 'file'){
       // relativePath = `${relativePath}/${file}`;
-      return readFile(`${path}/${file}`, file, type);
+      // return readFile(`${path}/${file}`, file, type);
+      return readFile(`${path}\\${file}`, file, type);
     }else {
       let icon = '';
       let link = '';
@@ -76,12 +83,12 @@ function readFile(path, name, type){
       if(type === 'img'){
         icon = "picture";
         link = '/achievement/file';
-        relativePathindex = path.indexOf('img/');
+        relativePathindex = path.indexOf('img');
         relativePath = path.substr(relativePathindex+4);
       }else if(type==='txt') {
         icon = "file-text";
         link = '/txt';
-        relativePathindex = path.indexOf('txt/');
+        relativePathindex = path.indexOf('txt');
         relativePath = path.substr(relativePathindex+4);
       }
       const newfile = file.replace(/%/, "%25");

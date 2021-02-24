@@ -5,6 +5,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { ElectronService} from 'ngx-electron';
 import {environment} from "@env/environment";
 import {STColumn, STComponent, STData, STPage} from "@delon/abc/st";
+import {NzMessageService} from "ng-zorro-antd/message";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'app-achievement',
@@ -27,14 +29,27 @@ export class TxtComponent implements OnInit, OnDestroy {
   };
   constructor(
     private _electronService: ElectronService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    public message: NzMessageService,
+    private modal: NzModalService,
   ) {
     this._electronService.ipcRenderer.on('read-txt-reply', (event, data)=>{
       console.log('ipcRenderer===txt====',data);
-      if(data){
+      // if(data){
+      //   this.data = data.data;
+      //   this.renderData.isSpinning = false;
+      // }
+      if(data.status === 'success'){
         this.data = data.data;
-        this.renderData.isSpinning = false;
+        // this.message.info('选区保存成功！')
+      }else {
+        this.modal.error({
+          nzTitle: '',
+          nzContent: '读取数据失败\n'+ data.message
+        });
+        // this.message.error('文件读取失败\n'+ data.message);
       }
+      this.renderData.isSpinning = false;
     });
   }
 
@@ -59,7 +74,7 @@ export class TxtComponent implements OnInit, OnDestroy {
           const index2 = queryParams.url.lastIndexOf('.');
           this.renderData.title = queryParams.url.substring(index1+1, index2);
 
-          this._electronService.ipcRenderer.send('read-txt-file',newUrl);
+          this._electronService.ipcRenderer.send('read-txt-file',{type:'acceleration',path:newUrl});
 
         });
     });

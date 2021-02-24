@@ -20,7 +20,8 @@ export class DrillListComponent implements OnInit, OnDestroy {
     parent:'',
     imgName:'',
     title:'',
-    isSpinning: false
+    isSpinning: false,
+    drills:[]
   }
   page: STPage = {
     front: false,
@@ -50,19 +51,26 @@ export class DrillListComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.renderData.isSpinning = true;
+
     console.log('AchievementComponent====');
     this.activatedRoute.url.subscribe(url => {
       console.log('url====',url);
         this.activatedRoute.queryParams.subscribe(queryParams => {
           console.log('queryParams====',queryParams);
           const newUrl = queryParams.url.replace(/%/, "%25");
+          console.log('newUrl====',newUrl);
           // this.renderData.fileUrl = `${environment.baseUrl}/assets/${newUrl}`;
           const index1 = queryParams.url.indexOf('/');
           const index2 = queryParams.url.lastIndexOf('.');
           this.renderData.title = queryParams.url.substring(index1+1, index2);
+          this.data = this.cache.getNone('drill-list');
+          // console.log('drill-list=====',this.data);
+          this._electronService.ipcRenderer.send('read-txt-file',{type:'drill',path:newUrl});
 
-          this._electronService.ipcRenderer.send('read-txt-file',newUrl);
+          // if(this.data&& this.data.length>0){
+          // }else {
+          //   this.renderData.isSpinning = true;
+          // }
 
         });
     });

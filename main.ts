@@ -3,8 +3,9 @@ import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
 
-import {asyncReadtxtFile} from './components/readTxtFile';
-import {readDirectory} from './components/menu';
+import {asyncReadtxtFile} from './components-mac/readTxtFile';
+import {readDirectory} from './components-mac/menu';
+import {asyncWritetxtFile} from './components-mac/writeFile';
 
 // 窗口
 let win: BrowserWindow = null;
@@ -36,7 +37,7 @@ function createWindow(): BrowserWindow {
       enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
     icon: '/Users/luotengzhan/Pictures/多肉/WechatIMG10.jpeg',
-});
+  });
 
   if (serve) {
 
@@ -104,114 +105,34 @@ try {
 }
 
 
-ipcMain.on('read-img-file', function(event, arg) {
-  console.log('ipcMain=====',imgFileObj);
-  event.sender.send('img-file-reply', {imgFileObj, type:'img'});
-});
+// ipcMain.on('read-img-file', function(event, arg) {
+//   console.log('read-img-file=====',arg);
+//   // event.sender.send('img-file-reply', {imgFileObj, type:'img'});
+//   event.sender.send('read-img-reply', {path:__dirname});
+// });
 
 
 ipcMain.on('read-file-directorys', function(event, arg) {
-  console.log('ipcMain=====',directorys);
+  // console.log('ipcMain=====',directorys);
   event.sender.send('file-directorys-reply', {menu:directorys});
 });
 
-/**
- * 获取文件目录， 并创建服务菜单
- */
-// let   directorys = [
-//   {name:'基岩时程', type:'txt', menu:{}},
-//   {name:'地质纵剖面图', type:'img', menu:{}},
-//   {name:'钻孔柱状图', type:'img', menu:{}},
-//   {name:'Amax区划图', type:'img', menu:{}},
-// ];
-// function readDirectory() {
-//   directorys = [
-//     {name:'基岩时程', type:'txt', menu:{}},
-//     {name:'地质纵剖面图', type:'img', menu:{}},
-//     {name:'钻孔柱状图', type:'img', menu:{}},
-//     {name:'Amax区划图', type:'img', menu:{}},
-//   ];
-//   directorys.forEach((item, index)=>{
-//     const path = `${__dirname}/src/assets/${item.type}/${item.name}`;
-//     const directorysObj = readFile(path, item.name, item.type, );
-//     directorys[index].menu = directorysObj;
-//   });
-//
-// }
 
-/**
- *
- * @param path： 文件路径
- * @param name： 文件名称
- * @param type： 文件类型
- * @param relativePath: 文件内的相对路径
- * @returns {{text: *, i18n: *, children: Array}}
- */
 
-function readFile(path, name, type){
-  const menu= {
-    "text": name,
-    "i18n": name,
-    // "group": true,
-    // "hideInBreadcrumb": true,
-    // icon: { type: 'iconfont', iconfont: 'iconquanping1'},
-    // "icon": item.icon === '0' ? null : { type: 'img', value: `${baseUrl}/assets/img/idc/menu/${item.icon}`},
-    "children":[],
-    // "data":item,
-  };
-  const files = fs.readdirSync(path);
-  menu.children = files.map(file=>{
-    const fileType =  inspectAndDescribeFile(`${path}/${file}`);
-    if(fileType !== 'file'){
-      return readFile(`${path}/${file}`, file, type);
-    }else {
-      let icon = '';
-      let link = '';
-      if(type === 'img'){
-        icon = "anticon-picture";
-        link = '/achievement/file';
-      }else if(type==='txt') {
-        icon = "anticon-file-text";
-        link = '/txt';
-      }
-      const newfile = file.replace(/%/, "%25");
-      const index = file.lastIndexOf('.');
-      const fileName = file.substr(0, index);
-      const relativePathindex = path.indexOf('txt');
-      const  relativePath = path.substr(relativePathindex+4);
-      const node = {
-        "text": fileName,
-        "link": `${link}?url=${type}/${relativePath}/${newfile}`,
-        "i18n": fileName,
-        icon,
-      }
-      return node;
-    }
-  })
-  return menu;
-}
 
-/**
- * 判断路径是文件还是文件夹
- * @param filePath
- */
-function inspectAndDescribeFile(filePath) {
-  let type ='file';
-  // console.log(fs.statSync(filePath));
-  const stat =  fs.statSync(filePath);
-  if (stat.isFile()) {
-    // 判断是否是文件
-    type = 'file';
-  }
-  if (stat.isDirectory()) { // 判断是否是目录
-    type = 'directory';
-  }
-
-  return type;
-}
 
 // 异步读取txt文件内容
-asyncReadtxtFile(`${__dirname}/src/assets/`);
+const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src'
+
+console.log('__dirname=====',__dirname);
+
+// 异步读取txt文件内容
+// const recPath = 'D:\\ll\\'
+// asyncReadtxtFile(`${recPath}`);
+// asyncWritetxtFile(`${recPath}txt\\`);
+asyncReadtxtFile(`${recPath}/assets/`);
+asyncWritetxtFile(`${recPath}/assets/txt/`);
+
 
 
 

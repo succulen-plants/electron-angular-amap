@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 // const ipcRenderer = require('electron').ipcRenderer;
 import { ElectronService} from 'ngx-electron';
 import {environment} from "@env/environment";
+import {LoadingService} from "@delon/abc/loading";
 
 @Component({
   selector: 'app-achievement',
@@ -22,9 +23,9 @@ export class AchievementComponent implements OnInit, OnDestroy {
   }
   constructor(
     private _electronService: ElectronService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private loadingSrv: LoadingService
   ) {
-
   }
 
   form: FormGroup;
@@ -36,14 +37,16 @@ export class AchievementComponent implements OnInit, OnDestroy {
     console.log('AchievementComponent====');
     this.activatedRoute.url.subscribe(url => {
       console.log('url====',url);
+      // 文件读取的，还是页面配置的
       if(url[0].path === 'file'){
         this.activatedRoute.queryParams.subscribe(queryParams => {
           console.log('queryParams====',queryParams);
           const newUrl = queryParams.url.replace(/%/, "%25");
-          this.imgUrl = `${environment.baseUrl}/assets/${newUrl}`;
+          // this.imgUrl = `./assets/${newUrl}`;
           const index1 = queryParams.url.lastIndexOf('/');
           const index2 = queryParams.url.lastIndexOf('.');
           this.renderData.title = queryParams.url.substring(index1+1, index2);
+          this.nativeimgae(newUrl);
         });
       }else {
         this.activatedRoute.data
@@ -52,17 +55,14 @@ export class AchievementComponent implements OnInit, OnDestroy {
             this.renderData.parent = v.parent;
               this.renderData.imgName = v.imgName;
               this.renderData.title = v.title;
-            this.imgUrl = `${environment.baseUrl}/assets/img/${v.parent}/${v.imgName}`;
+            // this.imgUrl = `img/${v.parent}/${v.imgName}`;
+            this.nativeimgae(`img/${v.parent}/${v.imgName}`);
             // this.imgUrl = `./assets/img/地震构造图/区域地震构造图.png`;
-            console.log(v)
           });
       }
     });
-
-
+    //
   }
-
-
 
 
   // 暂时保留， 待用
@@ -70,7 +70,7 @@ export class AchievementComponent implements OnInit, OnDestroy {
   ipc(){
     console.log('this._electronService.isElectronApp',this._electronService.isElectronApp);
     if(this._electronService.isElectronApp) {
-      let pong: string = this._electronService.ipcRenderer.sendSync('my-event');
+      let pong: string = this._electronService.ipcRenderer.sendSync('read-img', {});
       console.log('======icp===',pong);
       this._electronService.ipcRenderer.on('my-event', (err, payload)=>{
         const {data, picPath} = payload;
@@ -96,9 +96,14 @@ export class AchievementComponent implements OnInit, OnDestroy {
   }
 
 
-  nativeimgae(){
-    var image = this._electronService.nativeImage.createFromPath('/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src/assets/icons/favicon.png');
-    console.log(image.toDataURL());
+  nativeimgae(nativeimgaeUrl){
+    // this._electronService.ipcRenderer.send('read-img-file',{});
+    const path = `${environment.imgUrl}${nativeimgaeUrl}`;
+    console.log('====path===',path);
+    this.loadingSrv.open({type: 'spin' });
+    var image = this._electronService.nativeImage.createFromPath(path);
+    console.log('image===',image);
+    setTimeout(()=>this.loadingSrv.close(),500)
     this.imgUrl = image.toDataURL();
   }
 
@@ -107,7 +112,8 @@ export class AchievementComponent implements OnInit, OnDestroy {
   // }
 
   ngOnDestroy() {
-    this.imgUrl = '';
+    console.log('ngOnDestroy==========');
+    // this.imgUrl = '';
   }
 
 }

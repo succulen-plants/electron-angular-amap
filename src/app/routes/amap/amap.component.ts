@@ -13,6 +13,7 @@ import {environment} from "@env/environment";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {CacheService} from "@delon/cache";
+import {ElectronService} from "ngx-electron";
 declare var AMap: any
 
 
@@ -26,6 +27,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
 
   renderData ={
+    isSpinning:false,
     title:'地图',
     // 高德地图
     amap:null,
@@ -41,6 +43,8 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     overlayGroupStatus:false,
     // 选点功能开启状态
     clickShow: false,
+    // 参数计算状态
+    calculateShow:false,
     // 场地选点抽屉
     modalVisible: false,
     // 选点信息
@@ -50,8 +54,31 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     // 鼠标工具，区域选区
     overlays:null,
     polygonPath:null,
+    // 钻孔列表
+    drills:[],
 
   }
+
+  startIconBlue = new AMap.Icon({
+    // 图标尺寸
+    size: new AMap.Size(30, 30),
+    // 图标的取图地址
+    image: `./assets/icons/钻孔2.png`,
+    // 图标所用图片大小
+    imageSize: new AMap.Size(30, 30),
+    // 图标取图偏移量
+    // imageOffset: new AMap.Pixel(-9, -3)
+  });
+  startIconGreen = new AMap.Icon({
+    // 图标尺寸
+    size: new AMap.Size(30, 30),
+    // 图标的取图地址
+    image: `./assets/icons/钻孔3.png`,
+    // 图标所用图片大小
+    imageSize: new AMap.Size(30, 30),
+    // 图标取图偏移量
+    // imageOffset: new AMap.Pixel(-9, -3)
+  });
 
 
   @ViewChild('sf', { static: false }) sf: SFComponent;
@@ -80,28 +107,58 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
                   public message: NzMessageService,
                   private modal: NzModalService,
                   public cache: CacheService,
-  ){}
+                  private _electronService: ElectronService,
+  ){
+    this._electronService.ipcRenderer.on('write-txt-reply', (event, data)=>{
+      if(data.status === 'success'){
+        this.message.info('选区保存成功！')
+      }else {
+        // this.message.error('选区保存失败\n'+ data.message);
+        this.modal.error({
+          nzTitle: '',
+          nzContent: '选区保存失败\n'+ data.message
+        });
+      }
+      this.renderData.isSpinning = false;
+    });
+    this._electronService.ipcRenderer.on('read-txt-reply', (event, data)=>{
+      console.log('====read-txt-reply====', data);
+      if(data.status === 'success'){
+        if(data.type==='ploy'){
+          if(data.data.length>0){
+            this.addPolygon(data.data)
+          }else {
+            this.modal.info({
+              nzTitle: '',
+              nzContent: '还没有初始化选区，请开启选区功能进行选区。'
+            });
+          }
+        }else if(data.type === 'drill'){
+          this.renderData.drills = data.data;
+          this.cache.set('drill-list', data.data)
+          this.changeOverlayGroup();
+        }
+        // this.message.info('选区保存成功！')
+      }else {
+        // this.message.error('读取数据失败\n'+ data.message);
+        this.modal.error({
+          nzTitle: '',
+          nzContent: '读取数据失败\n'+ data.message
+        });
+      }
+      this.renderData.isSpinning = false;
+    });
+  }
 
   ngOnInit(): void {
-    // window.onload  = function(){
-    //   var map = new AMap.Map('map');
-    // }
-    // var url = 'https://webapi.amap.com/maps?v=1.4.15&key=9c2739aacf153b32a4773d373d6c0bee';
-    // var jsapi = document.createElement('script');
-    // jsapi.charset = 'utf-8';
-    // jsapi.src = url;
-    // document.head.appendChild(jsapi);
+    this._electronService.ipcRenderer.send('read-txt-file',{type:'ploy',path:'txt/poly.txt'});
+    // this.renderData.drills = this.cache.getNone('drill-list');
+    this._electronService.ipcRenderer.send('read-txt-file',{type:'drill',path:'txt/钻孔资料/钻孔坐标.txt'});
 
-    // this.renderData.amap = new AMap.Map('map', {
-    //   resizeEnable: true,
-    //   zoom : 15,
-    //   zooms:[5,20],
-    //   pitch: 52,
-    //   viewMode: '3D',
-    //   center:  [95.594839,35.695244],
-    //   // mapStyle:this.renderData.mapStyle
-    //   //前往创建自定义地图样式：https://lbs.amap.com/dev/mapstyle/index
-    // });
+    // if(!this.renderData.drills ){
+    //   // 钻孔不存在时要去读取文件
+    // }
+
   }
 
   ngOnDestroy() {
@@ -137,7 +194,9 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     // 添加覆盖区域
     // this.addPolygon();
 
-
+    if(this.renderData.drills.length>0) {
+      this.changeOverlayGroup();
+    }
   }
 
   // 开启测距功能
@@ -182,16 +241,22 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
   // 保存选区
   saveSelectPoly(){
     const path = this.renderData.overlays.w.path;
-    console.log(path);
     const paths =[];
+    let pathString = '';
     path.forEach((item:any)=>{
       paths.push([item.lng, item.lat]);
+      pathString = pathString+`${item.lng} ${item.lat}\r\n`;
     })
+
 
     this.renderData.selectPolyStatus = !this.renderData.selectPolyStatus;
     this.renderData.mouseTool.close(true);
     this.addPolygon(paths);
-    this.message.info('选区保存成功！')
+
+    this._electronService.ipcRenderer.send('write-txt-file',{name:'poly',data:pathString});
+    this.renderData.isSpinning = true;
+
+
   }
 
   // 添加多边形区域
@@ -202,7 +267,6 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     //   [116.402292, 39.892353],
     //   [116.389846, 39.891365]
     // ]
-    console.log(this.renderData.polygonPath);
     if(this.renderData.polygonPath!== null){
       this.renderData.amap.remove(this.renderData.polygonPath)
     }
@@ -218,8 +282,6 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
       zIndex: 50,
     });
     this.renderData.polygonPath = polygon;
-
-
     this.renderData.amap.add(polygon)
 
 
@@ -227,24 +289,10 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
   // 显示钻孔
   _addOverlayGroup(){
-    const drills:any[] = this.cache.getNone('drill-list');
-    if(!drills){}
-    var startIcon = new AMap.Icon({
-      // 图标尺寸
-      size: new AMap.Size(30, 30),
-      // 图标的取图地址
-      image: `${environment.baseUrl}/assets/icons/钻孔3.png`,
-      // 图标所用图片大小
-      imageSize: new AMap.Size(30, 30),
-      // 图标取图偏移量
-      // imageOffset: new AMap.Pixel(-9, -3)
-    });
-
-
     // text.setMap(map);
     // var lnglats = [[116.39, 39.92], [116.41, 39.93], [116.43, 39.91], [116.46, 39.93]];
     var markers = [];
-      drills.forEach(item=>{
+    this.renderData.drills.forEach(item=>{
         // 创建点实例
         var marker = new AMap.Marker({
           position: new AMap.LngLat(item.latitude, item.longitude),
@@ -252,7 +300,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
           extData: {
             // id: i + 1
           },
-          icon: startIcon,
+          icon: this.startIconBlue,
           title: item.num
         });
 
@@ -280,8 +328,10 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
         });
         text.setMap(this.renderData.amap);
         markers.push(marker);
+        markers.push(text);
       })
 
+    console.log(this.renderData.drills);
 
     // 创建覆盖物群组，并将 marker 传给 OverlayGroup
     this.renderData.overlayGroups = new AMap.OverlayGroup(markers);
@@ -302,6 +352,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
   }
 
   _addClickMarker = (e)=>{
+    console.log(e.lnglat.getLng());
     this._addMarker(e.lnglat.getLng(), e.lnglat.getLat());
   }
 
@@ -311,19 +362,69 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     }else {
       this.renderData.selectedPoint = new AMap.Marker({
         map: this.renderData.amap,
-        icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+        image: `./assets/icons/选点.png`,
         position: [x, y],
-        draggable: true
+        draggable: true,
+        // title:'我是选点， 请点击参数计算获取周边钻孔信息'
       });
       this.renderData.selectedPoint.setMap(this.renderData.amap);
       this.renderData.selectedPoint.on('dragging');
-      // this.renderData.amap.add(this.renderData.selectedPoint);
-      this.renderData.selectedPoint.setTitle('我是marker的title');
+      // // this.renderData.amap.add(this.renderData.selectedPoint);
+      // this.renderData.selectedPoint.setTitle('我是选点， 请点击参数计算获取周边钻孔信息');
+      this.renderData.calculateShow = true;
     }
 
     this.formData = {x, y};
   }
 
+  // 参数计算
+  calculate() {
+    console.log('======selectedPoint====', this.renderData.selectedPoint.getPosition());
+    const point = this.renderData.selectedPoint.getPosition();
+    // lat: 34.693016
+    // lng: 113.712893
+    const {lat, lng} = point;
+    console.log(this.renderData.drills);
+    const distance200=[];
+    const distance1000=[];
+    let distancs=[];
+    this.renderData.drills.forEach(item=>{
+      // {num: "K1", longitude: "34.6824", latitude: "113.7310"}
+      const distance = AMap.GeometryUtil.distance([item.latitude, item.longitude],[lng, lat])
+      console.log('distance===', distance);
+      if(distance<200){
+        distance200.push(item);
+      }else if(distance<1000){
+        distance1000.push(item);
+      }
+    });
+    if(distance200.length>0){
+      distancs = distance200;
+    }else {
+      distancs = distance1000;
+    }
+    const markers = this.renderData.amap.getAllOverlays('marker');
+    markers.forEach(item=>{
+      if(item.w.title){
+        item.setIcon(this.startIconBlue);
+      }
+    });
+    console.log('distancs=====',distancs);
+    if(distancs.length>0){
+
+      markers.forEach(marker=>{
+        distancs.forEach(item=>{
+          if(marker.w.title){
+            if(item.num === marker.w.title){
+              marker.setIcon(this.startIconGreen);
+            }
+          }
+        })
+      })
+    }
+
+
+  }
 
   // 改变图上选点开启关闭
   changeClickShow(){
@@ -332,10 +433,12 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
       this.renderData.modalVisible = false;
       // this._addOverlayGroup();
       this.renderData.amap.off('click', this._addClickMarker);
+      this.renderData.polygonPath.off('click', this._addClickMarker)
     }else {
       this.renderData.modalVisible = true;
       this.message.info('请点击地图选点或右侧输入框选点。');
       this.renderData.amap.on('click', this._addClickMarker);
+      this.renderData.polygonPath.on('click', this._addClickMarker)
     }
     this.renderData.clickShow = !this.renderData.clickShow;
     console.log("====changeClickShow==", this.renderData.modalVisible);

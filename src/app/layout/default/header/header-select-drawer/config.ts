@@ -5,9 +5,9 @@
 
 import { environment } from '@env/environment';
 
-const {  baseUrl } = environment;
+// const {  baseUrl } = environment;
 
-const baseImgUrl = `${baseUrl}/assets`;
+const baseImgUrl = `./assets`;
 
 // 成果展示
 export const achievementList = [
@@ -256,20 +256,27 @@ export const achievementList = [
       "children": [{
         title: "地震动参数成果表",
         "i18n": "地震动参数成果表",
-        "group": true,
-        "hideInBreadcrumb": true,
+        level: 1,
+        open: true,
+        selected: true,
+        disabled: false,
         "children":[
           {
             title: "基岩地震动参数成果表",
-            "link": "/dashboard/v1",
+            "link": "/dynamic/basement?url=txt/地震动参数成果表/基岩地震动参数成果表.txt",
             "i18n": "区域历史地震震中分布图",
             "icon": "border-bottom",
+            level: 2,
+            open: true,
+            selected: true,
           },
           {
             title: "地表地震动参数成果表",
-            "link": "/dashboard/analysis",
+            "link": "/dynamic/surface?url=txt/地震动参数成果表/地表地震动参数成果表.txt",
             "i18n": "区域现代地震震中分布图",
             "icon": "border-outer",
+            level: 2,
+            open: true,
           }
         ]
       }]

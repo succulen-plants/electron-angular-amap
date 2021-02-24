@@ -43,44 +43,62 @@ exports.asyncReadtxtFile = void 0;
 var electron_1 = require("electron");
 var fs = require("fs");
 function asyncReadtxtFile(path) {
+    console.log('=====asyncReadtxtFile', path);
     electron_1.ipcMain.on('read-txt-file', function (event, arg) {
         var argType = '';
-        console.log('ipcMain=====', arg);
-        if (arg.indexOf('钻孔坐标') !== -1) {
-            argType = 'drill';
-        }
-        else {
-            argType = '';
-        }
-        asyncReadFile(path + "/" + arg).then(function (data) {
+        console.log('asyncReadtxtFile=====', arg);
+        // if(arg.indexOf('钻孔坐标')!==-1){
+        //   argType = 'drill';
+        // }else {
+        //   argType = '';
+        // }
+        console.log('asyncReadtxtFile======', "" + path + arg.path);
+        var newPath = "" + path + arg.path;
+        console.log('newPath======', newPath);
+        asyncReadFile(newPath).then(function (data) {
             var dataList = [];
             var dataString = data.toString();
+            console.log(dataString);
             var dataArray = dataString.split(/[(\r\n)\r\n]+/);
             dataArray.forEach(function (item, index) {
                 // item.split(str.trim().split(/\s+/))
                 // 解析每行内容， 以空格分割
                 var array = item.trim().split(/\s+/);
-                if (argType === 'drill') {
-                    if (Number(array[0])) {
-                        var node = {
-                            'num': array[2],
-                            'longitude': array[0],
-                            'latitude': array[1]
-                        };
-                        dataList.push(node);
+                if (array) {
+                    if (arg.type === 'drill') {
+                        if (Number(array[0])) {
+                            var node = {
+                                'num': array[2],
+                                'longitude': array[0],
+                                'latitude': array[1]
+                            };
+                            dataList.push(node);
+                        }
                     }
-                }
-                else {
-                    var node = {
-                        'time': array[0],
-                        'acceleration': array[1]
-                    };
-                    if (array[0] !== '0' && parseFloat(array[1]) !== 0) {
-                        dataList.push(node);
+                    else if (arg.type === 'acceleration') {
+                        var node = {
+                            'time': array[0],
+                            'acceleration': array[1]
+                        };
+                        if (array[0] !== '0' && parseFloat(array[1]) !== 0) {
+                            dataList.push(node);
+                        }
+                    }
+                    else if (arg.type === 'ploy') {
+                        if (array[0] !== '') {
+                            dataList.push(array);
+                        }
+                    }
+                    else {
+                        dataList.push(array);
                     }
                 }
             });
-            event.sender.send('read-txt-reply', { data: dataList });
+            console.log('datalist====', dataList);
+            event.sender.send('read-txt-reply', { status: 'success', data: dataList, type: arg.type });
+        }).catch(function (error) {
+            console.log(error);
+            event.sender.send('read-txt-reply', { status: 'error', message: error });
         });
         // event.sender.send('read-txt-reply', {data});
     });
@@ -92,7 +110,7 @@ function asyncReadFile(url) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    console.log(url);
+                    console.log('asyncReadFile=====', url);
                     return [4 /*yield*/, readTxt(url)];
                 case 1:
                     f1 = _a.sent();
@@ -103,9 +121,10 @@ function asyncReadFile(url) {
 }
 ;
 function readTxt(path) {
-    console.log(path);
+    console.log('readTxt===', path);
     return new Promise(function (resolve, reject) {
         fs.readFile(path, 'utf-8', function (error, data) {
+            // console.log('readTxt===',data);
             if (error)
                 reject(error);
             resolve(data);
@@ -113,4 +132,5 @@ function readTxt(path) {
     });
 }
 ;
+// asyncReadtxtFile(`${__dirname}/src/assets/`);
 //# sourceMappingURL=readTxtFile.js.map
