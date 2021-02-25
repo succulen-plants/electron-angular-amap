@@ -4,6 +4,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {DrillListComponent} from "./drill-list/drill-list.component";
+import {SoilComponent} from "./soil/soil.component";
 /**
  * 业务组件
  */
@@ -13,11 +14,10 @@ const routes: Routes = [
   {
     path: 'list',
     component: DrillListComponent,
-    // data: {
-    //   parent: '地震构造图',
-    //   imgName:'区域地震构造图.png',
-    //   title:'区域地震构造图'
-    // },
+  },
+  {
+    path: 'soil',
+    component: SoilComponent,
   },
 ];
 

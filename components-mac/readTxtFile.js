@@ -60,6 +60,7 @@ function asyncReadtxtFile(path) {
             var dataString = data.toString();
             // console.log(dataString);
             var dataArray = dataString.split(/[(\r\n)\r\n]+/);
+            console.log(dataArray);
             dataArray.forEach(function (item, index) {
                 // item.split(str.trim().split(/\s+/))
                 // 解析每行内容， 以空格分割
@@ -104,7 +105,24 @@ function asyncReadtxtFile(path) {
                             };
                             dataList.push(node);
                         }
-                        console.log('array=====', array);
+                        // console.log('array=====',array);
+                    }
+                    else if (arg.type === 'drillSoil') {
+                        if (Number(array[3])) {
+                            var node = {
+                                'soilNum': array[0],
+                                'name': array[1],
+                                'height': array[2],
+                                'rate': array[3],
+                                'wetDensity': array[4],
+                                'Drydensity': array[5],
+                                'liquid': array[6],
+                                'plastic': array[7],
+                                'index': array[8],
+                            };
+                            dataList.push(node);
+                        }
+                        // console.log('array=====',array);
                     }
                     else if (arg.type === 'acceleration') {
                         var node = {

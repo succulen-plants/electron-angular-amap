@@ -139,7 +139,6 @@ export const achievementList = [
     name:"钻孔资料及计算模型",
     list:[{
       title: '钻孔资料',
-      // path: `${mgtOrigin}/iotPlant/#/home?quickstart=632`\
       menu: 'menu.manage',
       auth: 'haveAuth',
       navImg: `${baseImgUrl}/icons/钻孔资料.png`,
@@ -153,7 +152,7 @@ export const achievementList = [
         "children":[
           {
             title: "钻孔坐标",
-            "link": "/drill?url=txt/钻孔资料/钻孔坐标.txt",
+            "link": "/drill/list?url=txt/钻孔资料/钻孔坐标.txt",
             "i18n": "钻孔坐标",
             "icon": "border-bottom",
             level: 2,
@@ -162,10 +161,11 @@ export const achievementList = [
           },
           {
             title: "土工试验成果表",
-            // "link": "/dashboard/analysis",
+            "link": "/drill/soil?url=txt/钻孔资料/土工试验成果表.txt",
             level: 2,
             "i18n": "土工试验成果表",
             "icon": "border-outer",
+            open: true,
           },
           {
             title: "液化钻孔成果表",
