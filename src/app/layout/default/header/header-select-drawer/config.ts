@@ -169,7 +169,7 @@ export const achievementList = [
           },
           {
             title: "液化钻孔成果表",
-            // "link": "/dashboard/analysis",
+            "link": "/drill/liquidation?url=txt/钻孔资料/液化钻孔成果表.txt",
             "i18n": "液化钻孔成果表",
             "icon": "border-inner",
             level: 2,

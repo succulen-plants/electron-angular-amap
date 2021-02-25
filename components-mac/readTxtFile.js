@@ -124,6 +124,25 @@ function asyncReadtxtFile(path) {
                         }
                         // console.log('array=====',array);
                     }
+                    // 液化钻孔成功表
+                    else if (arg.type === 'liquidation') {
+                        if (Number(array[1])) {
+                            var node = {
+                                'num': array[0],
+                                'layer': array[1],
+                                'dsm': array[2],
+                                'name': array[3],
+                                'pc': array[4],
+                                'ni': array[5],
+                                'ncri': array[6],
+                                'XdiWi': array[7],
+                                'result': array[8],
+                                'αmax': array[9],
+                            };
+                            dataList.push(node);
+                        }
+                        // console.log('array=====',array);
+                    }
                     else if (arg.type === 'acceleration') {
                         var node = {
                             'time': array[0],

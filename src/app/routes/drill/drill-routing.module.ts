@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {DrillListComponent} from "./drill-list/drill-list.component";
 import {SoilComponent} from "./soil/soil.component";
+import {LiquidationComponent} from "./liquidation/liquidation.component";
 /**
  * 业务组件
  */
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'soil',
     component: SoilComponent,
+  },
+  {
+    path: 'liquidation',
+    component: LiquidationComponent,
   },
 ];
 
