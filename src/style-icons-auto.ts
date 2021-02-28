@@ -88,6 +88,7 @@ import {
   EyeFill,
   EyeInvisibleFill,
   FileTextOutline,
+  SaveOutline,
 
 } from '@ant-design/icons-angular/icons';
 
@@ -177,4 +178,5 @@ export const ICONS_AUTO = [
   EyeFill,
   EyeInvisibleFill,
   FileTextOutline,
+  SaveOutline,
 ];

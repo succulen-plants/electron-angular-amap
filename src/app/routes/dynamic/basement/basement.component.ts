@@ -27,6 +27,7 @@ export class BasementComponent implements OnInit, OnDestroy {
     front: false,
     show: false,
   };
+  channel=null;
   constructor(
     private _electronService: ElectronService,
     public cache: CacheService,
@@ -37,6 +38,7 @@ export class BasementComponent implements OnInit, OnDestroy {
       if(data){
         this.data = data.data;
         this.cache.set('basement-list', data.data)
+        console.log('===basement-list',this.cache.getNone('basement-list'));
         this.renderData.isSpinning = false;
       }
     });
@@ -80,7 +82,9 @@ export class BasementComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
+    console.log('ngOnDestroy====');
     // this.imgUrl = '';
+    this._electronService.ipcRenderer.removeAllListeners('read-txt-reply');
   }
 
 }

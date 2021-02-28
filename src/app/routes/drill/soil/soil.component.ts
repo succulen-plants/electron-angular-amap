@@ -66,7 +66,7 @@ export class SoilComponent implements OnInit, OnDestroy {
           const index1 = queryParams.url.indexOf('/');
           const index2 = queryParams.url.lastIndexOf('.');
           this.renderData.title = queryParams.url.substring(index1+1, index2);
-          this.data = this.cache.getNone('basement-list');
+          // this.data = this.cache.getNone('basement-list');
           // console.log('basement-list=====',this.data);
           this._electronService.ipcRenderer.send('read-txt-file',{type:'drillSoil',path:newUrl});
 
@@ -81,9 +81,10 @@ export class SoilComponent implements OnInit, OnDestroy {
   }
 
 
-
   ngOnDestroy() {
+    console.log('ngOnDestroy====');
     // this.imgUrl = '';
+    this._electronService.ipcRenderer.removeAllListeners('read-txt-reply');
   }
 
 }

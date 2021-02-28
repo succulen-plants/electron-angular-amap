@@ -56,6 +56,8 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     polygonPath:null,
     // 钻孔列表
     drills:[],
+    // 计算范围区域
+    circle: null,
 
   }
 
@@ -197,6 +199,8 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     if(this.renderData.drills.length>0) {
       this.changeOverlayGroup();
     }
+
+    console.log('basement-list===',this.cache.getNone('basement-list'));
   }
 
   // 开启测距功能
@@ -240,23 +244,23 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
   }
   // 保存选区
   saveSelectPoly(){
-    const path = this.renderData.overlays.w.path;
-    const paths =[];
-    let pathString = '';
-    path.forEach((item:any)=>{
-      paths.push([item.lng, item.lat]);
-      pathString = pathString+`${item.lng} ${item.lat}\r\n`;
-    })
+    if(this.renderData.overlays!== null){
+      const path = this.renderData.overlays.w.path;
+      const paths =[];
+      let pathString = '';
+      path.forEach((item:any)=>{
+        paths.push([item.lng, item.lat]);
+        pathString = pathString+`${item.lng} ${item.lat}\r\n`;
+      })
 
 
-    this.renderData.selectPolyStatus = !this.renderData.selectPolyStatus;
-    this.renderData.mouseTool.close(true);
-    this.addPolygon(paths);
+      this.renderData.selectPolyStatus = !this.renderData.selectPolyStatus;
+      this.renderData.mouseTool.close(true);
+      this.addPolygon(paths);
 
-    this._electronService.ipcRenderer.send('write-txt-file',{name:'poly',data:pathString});
-    this.renderData.isSpinning = true;
-
-
+      this._electronService.ipcRenderer.send('write-txt-file',{name:'poly',data:pathString});
+      this.renderData.isSpinning = true;
+    }
   }
 
   // 添加多边形区域
@@ -285,6 +289,27 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     this.renderData.amap.add(polygon)
 
 
+  }
+
+  /**
+   *
+   */
+  _addRound(center:any, radius){
+    console.log(center, radius);
+    if(this.renderData.circle!==null){
+      this.renderData.amap.remove(this.renderData.circle);
+    }
+    // 构造矢量圆形
+    this.renderData.circle = new AMap.Circle({
+      center: new AMap.LngLat( center.lng, center.lat), // 圆心位置
+      radius: radius,  //半径
+      strokeColor: "#F33",  //线颜色
+      strokeOpacity: 1,  //线透明度
+      strokeWeight: 3,  //线粗细度
+      fillColor: "#ee2200",  //填充颜色
+      fillOpacity: 0 //填充透明度
+    });
+    this.renderData.amap.add(this.renderData.circle);
   }
 
   // 显示钻孔
@@ -384,7 +409,8 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     // lat: 34.693016
     // lng: 113.712893
     const {lat, lng} = point;
-    console.log(this.renderData.drills);
+
+    console.log('drills==',this.renderData.drills);
     const distance200=[];
     const distance1000=[];
     let distancs=[];
@@ -398,11 +424,18 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
         distance1000.push(item);
       }
     });
+
+
+    let radius = 0;
     if(distance200.length>0){
       distancs = distance200;
+      radius = 200;
     }else {
       distancs = distance1000;
+      radius = 1000;
     }
+    this._addRound(point, radius);
+
     const markers = this.renderData.amap.getAllOverlays('marker');
     markers.forEach(item=>{
       if(item.w.title){
@@ -410,22 +443,77 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
       }
     });
     console.log('distancs=====',distancs);
-    if(distancs.length>0){
+    this.calculateBasementSurface(distancs);
+    // if(distancs.length>0){
+    //   markers.forEach(marker=>{
+    //     distancs.forEach(item=>{
+    //       if(marker.w.title){
+    //         if(item.num === marker.w.title){
+    //           marker.setIcon(this.startIconGreen);
+    //         }
+    //       }
+    //     })
+    //   })
+    // }
+  }
 
-      markers.forEach(marker=>{
-        distancs.forEach(item=>{
-          if(marker.w.title){
-            if(item.num === marker.w.title){
-              marker.setIcon(this.startIconGreen);
-            }
-          }
-        })
+  calculateBasementSurface(distancs){
+    const basementList:any = this.cache.getNone('basement-list');
+    const surfaceList:any = this.cache.getNone('surface-list');
+    console.log('basementList===',basementList);
+    console.log('surfaceList===',surfaceList);
+    let newBase = [], newSurface = [], maxBase:any={}, maxSurface = [];
+    distancs.forEach(dis=>{
+      basementList.forEach(bas=>{
+        if(dis.num === bas.num){
+          newBase.push(bas);
+        }
       })
+
+      surfaceList.forEach(sur=>{
+        if(dis.num === sur.num){
+          newSurface.push(sur);
+        }
+      })
+    })
+
+    console.log('newBase===',newBase);
+    console.log('newSurface===',newSurface);
+    // { title: '控制点', index: 'num' },
+    // { title: '50年63%', index: '5063' },
+    // { title: '50年10%', index: '5010' },
+    // { title: '50年2%', index: '502' },
+    // { title: '100年63%', index: '10063' },
+    // { title: '100年10%', index: '10010' },
+    // { title: '100年2%', index: '1002' },
+    for(let key in newBase[0]){
+      if(key !== 'num'){
+        let max = newBase[0];
+        for(let i=0; i< newBase.length; i++){
+          if(newBase[i+1] && Number(max[key])<Number(newBase[i+1][key])){
+            max = newBase[i+1];
+          }
+        }
+        maxBase[key] = max;
+      }
+    }
+
+    for(let key in newSurface[0]){
+      if(key !== 'num' && key!== 'probability'){
+        let max = newSurface[0];
+        for(let i=0; i< newSurface.length; i++){
+          if(newSurface[i+1] && Number(max[key])<Number(newSurface[i+1][key])){
+            max = newSurface[i+1];
+          }
+        }
+        maxSurface[key] = max;
+      }
     }
 
 
+    console.log('maxBase===',maxBase);
+    console.log('maxSurface===',maxSurface);
   }
-
   // 改变图上选点开启关闭
   changeClickShow(){
     if(this.renderData.clickShow){

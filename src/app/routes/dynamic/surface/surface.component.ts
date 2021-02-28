@@ -36,7 +36,7 @@ export class SurfaceComponent implements OnInit, OnDestroy {
       console.log('ipcRenderer====basement===',data);
       if(data){
         this.data = data.data;
-        this.cache.set('basement-list', data.data)
+        this.cache.set('surface-list', data.data)
         this.renderData.isSpinning = false;
       }
     });
@@ -63,7 +63,7 @@ export class SurfaceComponent implements OnInit, OnDestroy {
           const index1 = queryParams.url.indexOf('/');
           const index2 = queryParams.url.lastIndexOf('.');
           this.renderData.title = queryParams.url.substring(index1+1, index2);
-          this.data = this.cache.getNone('basement-list');
+          this.data = this.cache.getNone('surface-list');
           // console.log('basement-list=====',this.data);
           this._electronService.ipcRenderer.send('read-txt-file',{type:'surface',path:newUrl});
 
@@ -80,7 +80,9 @@ export class SurfaceComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
+    console.log('ngOnDestroy====');
     // this.imgUrl = '';
+    this._electronService.ipcRenderer.removeAllListeners('read-txt-reply');
   }
 
 }

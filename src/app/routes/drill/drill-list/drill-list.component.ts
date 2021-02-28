@@ -80,7 +80,9 @@ export class DrillListComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
+    console.log('ngOnDestroy====');
     // this.imgUrl = '';
+    this._electronService.ipcRenderer.removeAllListeners('read-txt-reply');
   }
 
 }
