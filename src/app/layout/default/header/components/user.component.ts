@@ -52,11 +52,13 @@ export class HeaderUserComponent {
   constructor(
     public settings: SettingsService,
     private router: Router,
+    public cache: CacheService,
   ) {
   }
 
   logout() {
     // this.tokenService.clear();
+    this.cache.clear();
     this.router.navigateByUrl('/passport/login');
   }
 

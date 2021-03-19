@@ -3,9 +3,10 @@ import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
 
-import {asyncReadtxtFile} from './components/readTxtFile';
+import {readTxtFile} from './components/readTxtFile2';
 import {readDirectory} from './components/menu';
 import {asyncWritetxtFile} from './components/writeFile';
+import {writeDocTemplater} from "./components-mac/docTemplater";
 
 // 窗口
 let win: BrowserWindow = null;
@@ -36,7 +37,6 @@ function createWindow(): BrowserWindow {
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
       enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
-    icon: '/Users/luotengzhan/Pictures/多肉/WechatIMG10.jpeg',
 });
 
   if (serve) {
@@ -64,6 +64,9 @@ function createWindow(): BrowserWindow {
     win = null;
   });
 
+  //开启world 功能
+  writeDocTemplater(win, recPath);
+
   return win;
 }
 
@@ -76,7 +79,7 @@ try {
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
-    directorys = readDirectory(__dirname);
+    directorys = readDirectory();
     setTimeout(createWindow, 400);
   });
 
@@ -104,11 +107,11 @@ try {
 
 }
 
-
-ipcMain.on('read-img-file', function(event, arg) {
-  console.log('ipcMain=====',imgFileObj);
-  event.sender.send('img-file-reply', {imgFileObj, type:'img'});
-});
+//
+// ipcMain.on('read-img-file', function(event, arg) {
+//   console.log('ipcMain=====',imgFileObj);
+//   event.sender.send('img-file-reply', {imgFileObj, type:'img'});
+// });
 
 
 ipcMain.on('read-file-directorys', function(event, arg) {
@@ -125,8 +128,8 @@ ipcMain.on('read-file-directorys', function(event, arg) {
 
 
 // 异步读取txt文件内容
-const recPath = 'D:\\ll\\'
-asyncReadtxtFile(`${recPath}`);
+const recPath = 'D:\\ses\\'
+readTxtFile(`${recPath}`);
 asyncWritetxtFile(`${recPath}txt\\`);
 // asyncReadtxtFile(`${__dirname}/src/assets/`);
 // asyncWritetxtFile(`${__dirname}/src/assets/txt/`);

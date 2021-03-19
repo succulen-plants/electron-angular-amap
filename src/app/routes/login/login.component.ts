@@ -1,6 +1,8 @@
 import { Component, Inject, OnDestroy, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import {DA_SERVICE_TOKEN, ITokenService} from "@delon/auth";
+import {CacheService} from "@delon/cache";
 
 
 @Component({
@@ -12,6 +14,8 @@ export class LoginComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    public cache: CacheService,
+    @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService
   ) {
     this.form = fb.group({
       userName: [null, [Validators.required, Validators.minLength(4)]],
@@ -88,8 +92,15 @@ export class LoginComponent implements OnDestroy {
       }
     }
 
-    if(this.userName.value === 'admin' && this.password.value==='123'){
+    if(this.userName.value === 'admin' && this.password.value==='123456'){
       console.log('=====login');
+      // this.tokenService.set({ token: '123456'});
+      // 清除掉表单填写的内容
+      this.cache.remove('baseData');
+      this.cache.remove('gongChengData');
+      this.cache.remove('ruantuData');
+      this.cache.remove('maxDizhenDongCan');
+      this.cache.remove('gongChengSt');
       this.router.navigateByUrl('/nomenu');
     }else{
       this.error = '用户名或密码有误'

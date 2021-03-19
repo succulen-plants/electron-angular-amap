@@ -1,11 +1,16 @@
-import { app, BrowserWindow, screen, ipcMain } from 'electron';
+import { app, BrowserWindow, screen, ipcMain, dialog } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
 
-import {asyncReadtxtFile} from './components-mac/readTxtFile';
+
+
+
+import {readTxtFile} from './components-mac/readTxtFile2';
 import {readDirectory} from './components-mac/menu';
 import {asyncWritetxtFile} from './components-mac/writeFile';
+import {writeDocTemplater} from './components-mac/docTemplater';
+
 
 // 窗口
 let win: BrowserWindow = null;
@@ -36,7 +41,6 @@ function createWindow(): BrowserWindow {
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
       enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
-    icon: '/Users/luotengzhan/Pictures/多肉/WechatIMG10.jpeg',
   });
 
   if (serve) {
@@ -64,6 +68,9 @@ function createWindow(): BrowserWindow {
     win = null;
   });
 
+  //开启world 功能
+  writeDocTemplater(win, recPath);
+
   return win;
 }
 
@@ -76,7 +83,7 @@ try {
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
-    directorys = readDirectory(__dirname);
+    directorys = readDirectory();
     setTimeout(createWindow, 400);
   });
 
@@ -120,9 +127,8 @@ ipcMain.on('read-file-directorys', function(event, arg) {
 
 
 
-
 // 异步读取txt文件内容
-const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src'
+const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/ses/'
 
 console.log('__dirname=====',__dirname);
 
@@ -130,8 +136,8 @@ console.log('__dirname=====',__dirname);
 // const recPath = 'D:\\ll\\'
 // asyncReadtxtFile(`${recPath}`);
 // asyncWritetxtFile(`${recPath}txt\\`);
-asyncReadtxtFile(`${recPath}/assets/`);
-asyncWritetxtFile(`${recPath}/assets/txt/`);
+readTxtFile(`${recPath}`);
+asyncWritetxtFile(`${recPath}txt/`);
 
 
 

@@ -64,13 +64,9 @@ export class DrillListComponent implements OnInit, OnDestroy {
           const index2 = queryParams.url.lastIndexOf('.');
           this.renderData.title = queryParams.url.substring(index1+1, index2);
           this.data = this.cache.getNone('drill-list');
-          // console.log('drill-list=====',this.data);
+          this.renderData.isSpinning = true;
           this._electronService.ipcRenderer.send('read-txt-file',{type:'drill',path:newUrl});
 
-          // if(this.data&& this.data.length>0){
-          // }else {
-          //   this.renderData.isSpinning = true;
-          // }
 
         });
     });
@@ -81,7 +77,8 @@ export class DrillListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('ngOnDestroy====');
-    // this.imgUrl = '';
+    this.columns = [];
+    this.data = [];
     this._electronService.ipcRenderer.removeAllListeners('read-txt-reply');
   }
 

@@ -7,11 +7,12 @@ import * as fs from "fs";
 let count = 0;
 let open = false;
 let level = 1;
-const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src';
+const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/ses/';
 // const recPath = 'D:\\ll\\';
-export  function readDirectory(dirname) {
+export  function readDirectory() {
   let directorys = [
     {name:'基岩时程', type:'txt', menu:{}},
+    {name:'钻孔资料/物理力学性能指标', type:'txt', menu:{}},
     {name:'地质纵剖面图', type:'img', menu:{}},
     {name:'钻孔柱状图', type:'img', menu:{}},
     {name:'Amax区划图', type:'img', menu:{}},
@@ -20,7 +21,7 @@ export  function readDirectory(dirname) {
     count = 0;
     level = 1;
     // const path = `${dirname}/src/assets/${item.type}/${item.name}`;
-    const path = `${recPath}/assets/${item.type}/${item.name}`;
+    const path = `${recPath}${item.type}/${item.name}`;
     // const path = `${recPath}${item.type}\\${item.name}`;
     // console.log('menu  path===',path);
     const directorysObj = readFile(path, item.name, item.type);
@@ -88,6 +89,9 @@ function readFile(path, name, type){
       }else if(type==='txt') {
         icon = "file-text";
         link = '/txt';
+        if(name === '钻孔资料/物理力学性能指标'){
+          link = '/achievement/file';
+        }
         relativePathindex = path.indexOf('txt/');
         relativePath = path.substr(relativePathindex+4);
       }

@@ -17,6 +17,8 @@ import {ICONS} from "../../../../../style-icons";
 import {NzIconService} from "ng-zorro-antd/icon";
 import {ElectronService} from "ngx-electron";
 import {DataCommunicateService} from "../../../../service/data-communicate.service";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {WorldComponent} from "../../../../routes/world/world.component";
 
 @Component({
   selector: 'header-select-drawer',
@@ -45,7 +47,9 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
               public cache: CacheService,
               private http: HttpClient,
               private menuService: MenuService,
+              private modalService: NzModalService,
               iconSrv: NzIconService,
+              public message: NzMessageService,
               private dataCommunicateService: DataCommunicateService,
               private router: Router) {
     iconSrv.addIcon(...ICONS_AUTO, ...ICONS);
@@ -78,17 +82,28 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
    * @param item 数据
    */
   handleJump(item: any) {
+    console.log('=============handleJump======');
     // const menuList = this.cache.getNone('menuList');
     // link 没有自菜单， 直接跳转
     console.log(item);
     this.cache.set('menuName', item.title);
     if(item.link!==null && item.link){
-      this.router.navigateByUrl(item.link);
+      if(item.link === '/world'){
+        const maxDizhenDongCan = this.cache.getNone('maxDizhenDongCan');
+        if(maxDizhenDongCan){
+          this.openModel();
+        }else{
+          this.message.error('请先进行参数计算！');
+        }
+
+      }else{
+        this.router.navigateByUrl(item.link);
+      }
     }else {
       // readFile 读取文件获取菜单
       if(item.readFile!==null && item.readFile){
         const menu:any[] = this.cache.getNone(item.title);
-        console.log('=======readFile=',menu);
+
         // this.menuService.add(menu);
         this.dataCommunicateService.emitData({
           target: 'NzDemoMenuRecursiveComponent',
@@ -98,13 +113,22 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
         this.getDefaultRoute(menu[0]);
       }else{
         if(item.menu && item.children!==null){
-          console.log('have====',item);
           // this.menuService.add(item.children);
+          if(item.title === '钻孔资料'){
+            const menuwl = this.cache.getNone('钻孔资料/物理力学性能指标');
+            menuwl[0].title = '物理力学性能指标';
+            menuwl[0].i18n = '物理力学性能指标';
+            menuwl[0].selected = false;
+            menuwl[0].open = false;
+            menuwl[0].icon = 'border-inner';
+            item.children[0].children[6] = menuwl[0];
+          }
           this.dataCommunicateService.emitData({
             target: 'NzDemoMenuRecursiveComponent',
             value: item.children ,
           });
           // this.cache.set('menu', item.children)
+          console.log('link=====',item.children[0].children[0].link);
           this.router.navigateByUrl(item.children[0].children[0].link);
         }else{
           // window.open( item.path,'_blank');
@@ -118,7 +142,18 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
   ngAfterViewInit() {
   }
 
-  getDefaultRoute(currentMenu:any){
+  openModel() {
+    const model = this.modalService.create<WorldComponent>({
+      nzTitle: '安全评估报告',
+      nzContent: WorldComponent,
+      nzWidth: 950,
+      nzFooter: null,
+      nzComponentParams: {
+      },
+    })
+  }
+
+      getDefaultRoute(currentMenu:any){
     console.log('currentMenu====',currentMenu);
     console.log(currentMenu.link);
 

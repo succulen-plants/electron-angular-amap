@@ -44,7 +44,6 @@ export class SoilComponent implements OnInit, OnDestroy {
   data: STData[] = [];
   @ViewChild('st', { static: false }) private st: STComponent;
 
-
   columns: STColumn[] = [
     { title: '土样编号', index: 'soilNum' },
     { title: '土样定名', index: 'name' },
@@ -66,24 +65,19 @@ export class SoilComponent implements OnInit, OnDestroy {
           const index1 = queryParams.url.indexOf('/');
           const index2 = queryParams.url.lastIndexOf('.');
           this.renderData.title = queryParams.url.substring(index1+1, index2);
-          // this.data = this.cache.getNone('basement-list');
-          // console.log('basement-list=====',this.data);
+          this.renderData.isSpinning = true;
           this._electronService.ipcRenderer.send('read-txt-file',{type:'drillSoil',path:newUrl});
 
-          // if(this.data&& this.data.length>0){
-          // }else {
-          //   this.renderData.isSpinning = true;
-          // }
 
         });
     });
 
   }
 
-
   ngOnDestroy() {
     console.log('ngOnDestroy====');
-    // this.imgUrl = '';
+    this.columns = [];
+    this.data = [];
     this._electronService.ipcRenderer.removeAllListeners('read-txt-reply');
   }
 

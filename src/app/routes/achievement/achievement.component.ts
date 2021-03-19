@@ -41,12 +41,12 @@ export class AchievementComponent implements OnInit, OnDestroy {
       if(url[0].path === 'file'){
         this.activatedRoute.queryParams.subscribe(queryParams => {
           console.log('queryParams====',queryParams);
-          const newUrl = queryParams.url.replace(/%/, "%25");
+
           // this.imgUrl = `./assets/${newUrl}`;
           const index1 = queryParams.url.lastIndexOf('/');
           const index2 = queryParams.url.lastIndexOf('.');
           this.renderData.title = queryParams.url.substring(index1+1, index2);
-          this.nativeimgae(newUrl);
+          this.nativeimgae(queryParams.url);
         });
       }else {
         this.activatedRoute.data
@@ -56,7 +56,7 @@ export class AchievementComponent implements OnInit, OnDestroy {
               this.renderData.imgName = v.imgName;
               this.renderData.title = v.title;
             // this.imgUrl = `img/${v.parent}/${v.imgName}`;
-            this.nativeimgae(`img/${v.parent}/${v.imgName}`);
+            this.nativeimgae(`${v.file}/${v.parent}/${v.imgName}`);
             // this.imgUrl = `./assets/img/地震构造图/区域地震构造图.png`;
           });
       }
@@ -75,20 +75,9 @@ export class AchievementComponent implements OnInit, OnDestroy {
       this._electronService.ipcRenderer.on('my-event', (err, payload)=>{
         const {data, picPath} = payload;
 
-
         let file =  new File([data],picPath.split('/').reverse()[0],{type:'image/'+picPath.split('.').reverse()[0]})
         console.log(file);
 
-        // let file = new File([data],'test.jpeg',{type:'image/jpeg'})
-        // console.log(file);
-        // let render = new FileReader();
-        // render.readAsDataURL(file);
-        // render.onload = (e)=> {
-        //   console.log(render.result);
-        //   this.imgUrl = render.result;
-        //   // console.log(this.imgUrl);
-        //   // document.getElementById('img').src = newUrl;
-        // };
       })
 
 
@@ -100,9 +89,9 @@ export class AchievementComponent implements OnInit, OnDestroy {
     // this._electronService.ipcRenderer.send('read-img-file',{});
     const path = `${environment.imgUrl}${nativeimgaeUrl}`;
     console.log('====path===',path);
+    // const newPath = path.replace(/%/, "%25");
     this.loadingSrv.open({type: 'spin' });
     var image = this._electronService.nativeImage.createFromPath(path);
-    console.log('image===',image);
     setTimeout(()=>this.loadingSrv.close(),500)
     this.imgUrl = image.toDataURL();
   }

@@ -12,7 +12,7 @@ const baseImgUrl = `./assets`;
 // 成果展示
 export const achievementList = [
   {
-    name:"图建成果",
+    name:"图件成果",
     list:[{
       title: '地震构造图',
       menu: 'menu.manage',
@@ -176,35 +176,35 @@ export const achievementList = [
           },
           {
             title: "勘探点平面图",
-            // "link": "/dashboard/analysis",
+            "link": "/achievement/ktpt",
             "i18n": "勘探点平面图",
             "icon": "border-inner",
             level: 2,
           },
           {
             title: "等效剪切波速和场地类别",
-            // "link": "/dashboard/analysis",
-            "i18n": "勘探点平面图",
+            "link": "/drill/dengxiao?url=txt/钻孔资料/等效剪切波速和场地类别.txt",
+            "i18n": "等效剪切波速和场地类别",
             "icon": "border-inner",
             level: 2,
           },
           {
             title: "岩土分层信息",
-            // "link": "/dashboard/analysis",
+            "link": "/drill/cengtu?url=txt/钻孔资料/岩土分层信息.txt",
             "i18n": "岩土分层信息",
             "icon": "border-inner",
             level: 2,
           },
           {
-            title: "物理力学性质指标",
+            title: "物理力学性能指标",
             // "link": "/dashboard/analysis",
-            "i18n": "物理力学性质指标",
+            "i18n": "物理力学性能指标",
             "icon": "border-inner",
             level: 2,
           },
           {
             title: "动力学参数",
-            // "link": "/dashboard/analysis",
+            "link": "/drill/dongli?url=txt/钻孔资料/动力学参数表.txt",
             "i18n": "动力学参数",
             "icon": "border-inner",
             level: 2,
@@ -218,29 +218,12 @@ export const achievementList = [
     auth: 'haveAuth',
       navImg: `${baseImgUrl}/icons/土层计算模型.png`,
     "children": [{
-    title: "震中分布图",
-    "i18n": "震中分布图",
+    title: "土层计算模型",
+    "i18n": "土层计算模型",
     "group": true,
     "hideInBreadcrumb": true,
     "children":[
-      {
-        title: "区域历史地震震中分布图",
-        "link": "/dashboard/v1",
-        "i18n": "区域历史地震震中分布图",
-        "icon": "border-bottom",
-      },
-      {
-        title: "区域现代地震震中分布图",
-        "link": "/dashboard/analysis",
-        "i18n": "区域现代地震震中分布图",
-        "icon": "border-outer",
-      },
-      {
-        title: "近场区地震震中分布图",
-        "link": "/dashboard/analysis",
-        "i18n": "近场区地震震中分布图",
-        "icon": "border-inner",
-      }
+
     ]
   }]
 }]},
@@ -308,23 +291,18 @@ export const parameterList = [
   {
     name:"计算结果",
     list:[
-      {
-      title: '参数计算',
-      menu: 'menu.manage',
-      auth: 'haveAuth',
-        navImg: `${baseImgUrl}/icons/参数计算.png`,
-    },
+    //   {
+    //   title: '参数计算',
+    //   menu: 'menu.manage',
+    //   auth: 'haveAuth',
+    //     navImg: `${baseImgUrl}/icons/参数计算.png`,
+    // },
       {
       title: '查询报告',
       menu: 'menu.manage',
       auth: 'haveAuth',
         navImg: `${baseImgUrl}/icons/查询报告.png`,
-      "children": [{
-        title: "震中分布图",
-        "i18n": "震中分布图",
-        "group": true,
-        "hideInBreadcrumb": true,
-      }]
+        link: '/world',
     }]},
 ];
 // 参数查询

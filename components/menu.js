@@ -9,8 +9,8 @@ var count = 0;
 var open = false;
 var level = 1;
 // const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src';
-var recPath = 'D:\\ll\\';
-function readDirectory(dirname) {
+var recPath = 'D:\\ses\\';
+function readDirectory() {
     var directorys = [
         { name: '基岩时程', type: 'txt', menu: {} },
         { name: '地质纵剖面图', type: 'img', menu: {} },

@@ -20,6 +20,8 @@ import { NzIconService } from 'ng-zorro-antd/icon';
 import {ACLService} from "@delon/acl";
 import {MenuService, SettingsService} from "@delon/theme";
 import {ElectronService} from "ngx-electron";
+import {DA_SERVICE_TOKEN, ITokenService} from "@delon/auth";
+import {Router} from "@angular/router";
 // const { baseUrl } = environment;
 /**
  * 用于应用启动时
@@ -31,10 +33,10 @@ export class StartupService {
     iconSrv: NzIconService,
     private menuService: MenuService,
     private settingService: SettingsService,
-    // private aclService: ACLService,
-    // private titleService: TitleService,
+    @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
     private httpClient: HttpClient,
     public cache: CacheService,
+    private router: Router,
     private _electronService: ElectronService,
   ) {
     iconSrv.addIcon(...ICONS_AUTO, ...ICONS);
@@ -95,6 +97,11 @@ export class StartupService {
             // // 设置页面标题的后缀
             // this.titleService.default = '';
             // this.titleService.suffix = res.app.name;
+            const token = this.tokenService.get();
+            console.log('=====token',token);
+            if(JSON.stringify(token)==='{}'){
+              this.router.navigateByUrl('/passport/login');
+            }
           },
           () => {},
           () => {

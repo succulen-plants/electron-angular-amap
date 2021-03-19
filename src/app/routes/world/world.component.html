@@ -1,0 +1,25 @@
+<div class="main">
+  <div class="content">
+      <!--<nz-spin [nzSpinning]="renderData.isSpinning">-->
+        <nz-tabset nzType="card" nzSelectedIndex="0">
+          <nz-tab  nzTitle="基本信息">
+            <app-world-base></app-world-base>
+          </nz-tab>
+          <nz-tab  nzTitle="工程与场地类别">
+            <app-world-gongcheng></app-world-gongcheng>
+          </nz-tab>
+          <nz-tab  nzTitle="软土震陷">
+            <app-world-ruantu></app-world-ruantu>
+          </nz-tab>
+        </nz-tabset>
+      <!--</nz-spin>-->
+    <div>
+      创建简报：
+      <!--<button (click)="download()">导出</button>-->
+      <button nz-button nzType="primary" (click)="download()">导出</button>
+    </div>
+  </div>
+</div>
+
+
+

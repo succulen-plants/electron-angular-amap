@@ -1,0 +1,53 @@
+<!--<nz-spin nzTip="数据加载中..." [nzSpinning]="renderData.loading">-->
+  <sf #sf [schema]="schema" [button]="null" [(formData)]="formData" (formSubmit)="submit($event)" (formValueChange)="forformValueChangemChange($event)">
+    <!--<button [nzType]="'primary'" type="submit" nz-button >提交</button>-->
+    <!--<button [disabled]="!renderData.reset" (click)="sf.reset()" type="button" nz-button>重置</button>-->
+
+    <ng-template sf-template="myCustomWidget1" let-me let-ui="ui" let-schema="schema">
+      <span class="tip-icon"></span>
+      <span class="tip-text">基本信息</span>
+    </ng-template>
+    <ng-template sf-template="myCustomWidget2" let-me let-ui="ui" let-schema="schema">
+      <span class="tip-icon"></span>
+      <span class="tip-text">项目概况</span>
+    </ng-template>
+    <!--<ng-template sf-template="file" let-me let-ui="ui" let-schema="schema">-->
+      <!--<input type="file"  name="file" [(ngModel)]="renderData.file" (ngModelChange)="fileChange($event)" />-->
+    <!--</ng-template>-->
+    <!--<ng-template sf-template="compute" let-me let-ui="ui" let-schema="schema">-->
+      <!--<button class="compute-button" nz-button nzType="primary" nzShape="round" (click)="computeCoordinate(sf)">计算坐标</button>-->
+    <!--</ng-template>-->
+  </sf>
+
+  <input type="file" id="input_file" name="file" [(ngModel)]="renderData.file" (ngModelChange)="fileChange($event)" />
+
+
+  <!--<form nz-form>-->
+    <!--<nz-form-item>-->
+      <!--<nz-form-label [nzSpan]="6" nzFor="projectName">项目名称</nz-form-label>-->
+      <!--<nz-form-control [nzSpan]="14">-->
+        <!--<input nz-input name="projectName"  id="projectName">-->
+      <!--</nz-form-control>-->
+    <!--</nz-form-item >-->
+    <!--<nz-form-item>-->
+      <!--<nz-form-label [nzSpan]="6" nzFor="projectName">申请单位</nz-form-label>-->
+      <!--<nz-form-control [nzSpan]="14">-->
+        <!--<input nz-input name="sqDanwei"  id="sqDanwei">-->
+      <!--</nz-form-control>-->
+    <!--</nz-form-item >-->
+
+    <!--<nz-form-item>-->
+      <!--<nz-form-label [nzSpan]="6" nzFor="projectName">项目概况</nz-form-label>-->
+      <!--<nz-form-control [nzSpan]="14">-->
+        <!--<textarea rows="4" nz-input [(ngModel)]="renderData.textareaValue" [ngModelOptions]="{standalone: true}"></textarea>-->
+      <!--</nz-form-control>-->
+    <!--</nz-form-item >-->
+
+    <!--<nz-form-item>-->
+      <!--<nz-form-label [nzSpan]="6" nzFor="projectName">内容导入</nz-form-label>-->
+      <!--<nz-form-control [nzSpan]="14">-->
+        <!--<input type="file" id="file" name="file" />-->
+      <!--</nz-form-control>-->
+    <!--</nz-form-item >-->
+  <!--</form>-->
+<!--</nz-spin>-->

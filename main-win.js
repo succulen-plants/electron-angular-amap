@@ -3,9 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var electron_1 = require("electron");
 var path = require("path");
 var url = require("url");
-var readTxtFile_1 = require("./components/readTxtFile");
+var readTxtFile2_1 = require("./components/readTxtFile2");
 var menu_1 = require("./components/menu");
 var writeFile_1 = require("./components/writeFile");
+var docTemplater_1 = require("./components-mac/docTemplater");
 // 窗口
 var win = null;
 // 文件目录map
@@ -31,7 +32,6 @@ function createWindow() {
             contextIsolation: false,
             enableRemoteModule: true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
         },
-        icon: '/Users/luotengzhan/Pictures/多肉/WechatIMG10.jpeg',
     });
     if (serve) {
         win.webContents.openDevTools();
@@ -54,6 +54,8 @@ function createWindow() {
         // when you should delete the corresponding element.
         win = null;
     });
+    //开启world 功能
+    docTemplater_1.writeDocTemplater(win, recPath);
     return win;
 }
 try {
@@ -62,7 +64,7 @@ try {
     // Some APIs can only be used after this event occurs.
     // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
     electron_1.app.on('ready', function () {
-        directorys = menu_1.readDirectory(__dirname);
+        directorys = menu_1.readDirectory();
         setTimeout(createWindow, 400);
     });
     // Quit when all windows are closed.
@@ -85,10 +87,11 @@ catch (e) {
     // Catch Error
     // throw e;
 }
-electron_1.ipcMain.on('read-img-file', function (event, arg) {
-    console.log('ipcMain=====', imgFileObj);
-    event.sender.send('img-file-reply', { imgFileObj: imgFileObj, type: 'img' });
-});
+//
+// ipcMain.on('read-img-file', function(event, arg) {
+//   console.log('ipcMain=====',imgFileObj);
+//   event.sender.send('img-file-reply', {imgFileObj, type:'img'});
+// });
 electron_1.ipcMain.on('read-file-directorys', function (event, arg) {
     console.log('ipcMain=====', directorys);
     event.sender.send('file-directorys-reply', { menu: directorys });
@@ -96,8 +99,8 @@ electron_1.ipcMain.on('read-file-directorys', function (event, arg) {
 // 异步读取txt文件内容
 // const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src'
 // 异步读取txt文件内容
-var recPath = 'D:\\ll\\';
-readTxtFile_1.asyncReadtxtFile("" + recPath);
+var recPath = 'D:\\ses\\';
+readTxtFile2_1.readTxtFile("" + recPath);
 writeFile_1.asyncWritetxtFile(recPath + "txt\\");
 // asyncReadtxtFile(`${__dirname}/src/assets/`);
 // asyncWritetxtFile(`${__dirname}/src/assets/txt/`);

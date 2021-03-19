@@ -60,6 +60,37 @@ function asyncReadtxtFile(path) {
             var dataString = data.toString();
             console.log(dataString);
             var dataArray = dataString.split(/[(\r\n)\r\n]+/);
+            // dataArray.forEach((item, index)=>{
+            //   // item.split(str.trim().split(/\s+/))
+            //   // 解析每行内容， 以空格分割
+            //   const array = item.trim().split(/\s+/);
+            //   if(array){
+            //     if(arg.type === 'drill'){
+            //       if(Number(array[0])){
+            //         const node = {
+            //           'num':array[2],
+            //           'longitude':array[0],
+            //           'latitude':array[1]
+            //         }
+            //         dataList.push(node);
+            //       }
+            //     }else if(arg.type=== 'acceleration'){
+            //       const node = {
+            //         'time':array[0],
+            //         'acceleration':array[1]
+            //       }
+            //       if(array[0]!=='0' && parseFloat(array[1])!== 0){
+            //         dataList.push(node);
+            //       }
+            //     }else if(arg.type ==='ploy'){
+            //       if(array[0]!==''){
+            //         dataList.push(array)
+            //       }
+            //     }else {
+            //       dataList.push(array)
+            //     }
+            //   }
+            // });
             dataArray.forEach(function (item, index) {
                 // item.split(str.trim().split(/\s+/))
                 // 解析每行内容， 以空格分割
@@ -71,6 +102,85 @@ function asyncReadtxtFile(path) {
                                 'num': array[2],
                                 'longitude': array[0],
                                 'latitude': array[1]
+                            };
+                            dataList.push(node);
+                        }
+                    }
+                    else if (arg.type === 'basement') {
+                        if (Number(array[1])) {
+                            var node = {
+                                'num': array[0],
+                                '5063': array[1],
+                                '5010': array[2],
+                                '502': array[3],
+                                '10063': array[4],
+                                '10010': array[5],
+                                '1002': array[6],
+                            };
+                            dataList.push(node);
+                        }
+                        console.log('array=====', array);
+                    }
+                    else if (arg.type === 'surface') {
+                        if (Number(array[3])) {
+                            var node = {
+                                'num': array[0],
+                                'probability': array[1],
+                                'gal': array[2],
+                                'βm': array[3],
+                                'αmax': array[4],
+                                't1': array[5],
+                                'tg': array[6],
+                                'r': array[7],
+                            };
+                            dataList.push(node);
+                        }
+                        // console.log('array=====',array);
+                    }
+                    else if (arg.type === 'drillSoil') {
+                        if (Number(array[3])) {
+                            var node = {
+                                'soilNum': array[0],
+                                'name': array[1],
+                                'height': array[2],
+                                'rate': array[3],
+                                'wetDensity': array[4],
+                                'Drydensity': array[5],
+                                'liquid': array[6],
+                                'plastic': array[7],
+                                'index': array[8],
+                            };
+                            dataList.push(node);
+                        }
+                        // console.log('array=====',array);
+                    }
+                    // 液化钻孔成功表
+                    else if (arg.type === 'liquidation') {
+                        if (Number(array[1])) {
+                            var node = {
+                                'num': array[0],
+                                'layer': array[1],
+                                'dsm': array[2],
+                                'name': array[3],
+                                'pc': array[4],
+                                'ni': array[5],
+                                'ncri': array[6],
+                                'XdiWi': array[7],
+                                'result': array[8],
+                                'αmax': array[9],
+                            };
+                            dataList.push(node);
+                        }
+                        // console.log('array=====',array);
+                    }
+                    // 等效剪切波速和场地类别
+                    else if (arg.type === 'dengxiao') {
+                        if (Number(array[1])) {
+                            var node = {
+                                'num': array[0],
+                                'm': array[1],
+                                'ms': array[2],
+                                'siteType': array[3],
                             };
                             dataList.push(node);
                         }

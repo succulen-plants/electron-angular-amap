@@ -21,11 +21,7 @@ export class AppComponent implements OnInit {
     private _electronService: ElectronService
   ) {
     renderer.setAttribute(el.nativeElement, 'ng-alain-version', VERSION_ALAIN.full);
-    console.log('this._electronService.isElectronApp',this._electronService.isElectronApp);
-    if(this._electronService.isElectronApp) {
-      // let pong: string = this._electronService.ipcRenderer.sendSync('my-event');
-      // console.log(pong);
-    }
+
 
     // let pong: string = this._electronService.ipcRenderer.sendSync('my-event');
     // console.log(pong);

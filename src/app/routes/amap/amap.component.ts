@@ -57,7 +57,13 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     // 钻孔列表
     drills:[],
     // 计算范围区域
-    circle: null,
+    circle200: null,
+    circle700: null,
+    clearShow: false,
+    // distances 距离选定点距离200或700 的点
+    distancs:[],
+    common:null,
+    surface:null,
 
   }
 
@@ -135,10 +141,21 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
               nzContent: '还没有初始化选区，请开启选区功能进行选区。'
             });
           }
-        }else if(data.type === 'drill'){
+        }
+        else if(data.type === 'drill'){
           this.renderData.drills = data.data;
           this.cache.set('drill-list', data.data)
           this.changeOverlayGroup();
+        }
+        // common 一般参数
+        else if(data.type === 'common'){
+          this.renderData.common = data.data;
+          console.log('common==========',this.renderData.common);
+          this.cache.set('common', this.renderData.common);
+        }
+        else if(data.type === 'surface'){
+          this.renderData.surface = data.data;
+          this.cache.set('surface', this.renderData.surface);
         }
         // this.message.info('选区保存成功！')
       }else {
@@ -156,6 +173,10 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     this._electronService.ipcRenderer.send('read-txt-file',{type:'ploy',path:'txt/poly.txt'});
     // this.renderData.drills = this.cache.getNone('drill-list');
     this._electronService.ipcRenderer.send('read-txt-file',{type:'drill',path:'txt/钻孔资料/钻孔坐标.txt'});
+
+    this._electronService.ipcRenderer.send('read-txt-file',{type:'common',path:'txt/一般工程设计地震动参数工作表.txt'});
+    this._electronService.ipcRenderer.send('read-txt-file',{type:'surface',path:'txt/地震动参数成果表/地表地震动参数成果表.txt'});
+    // this._electronService.ipcRenderer.send('read-txt-file',{type:'surface',path:newUrl});
 
     // if(!this.renderData.drills ){
     //   // 钻孔不存在时要去读取文件
@@ -296,11 +317,11 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
    */
   _addRound(center:any, radius){
     console.log(center, radius);
-    if(this.renderData.circle!==null){
-      this.renderData.amap.remove(this.renderData.circle);
-    }
+    // if(this.renderData.circle!==null){
+    //   this.renderData.amap.remove(this.renderData.circle);
+    // }
     // 构造矢量圆形
-    this.renderData.circle = new AMap.Circle({
+    const circle = new AMap.Circle({
       center: new AMap.LngLat( center.lng, center.lat), // 圆心位置
       radius: radius,  //半径
       strokeColor: "#F33",  //线颜色
@@ -309,7 +330,12 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
       fillColor: "#ee2200",  //填充颜色
       fillOpacity: 0 //填充透明度
     });
-    this.renderData.amap.add(this.renderData.circle);
+    if(radius ===200){
+      this.renderData.circle200 = circle;
+    }else {
+      this.renderData.circle700 = circle;
+    }
+    this.renderData.amap.add(circle);
   }
 
   // 显示钻孔
@@ -394,7 +420,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
       });
       this.renderData.selectedPoint.setMap(this.renderData.amap);
       this.renderData.selectedPoint.on('dragging');
-      // // this.renderData.amap.add(this.renderData.selectedPoint);
+      // this.renderData.amap.add(this.renderData.selectedPoint);
       // this.renderData.selectedPoint.setTitle('我是选点， 请点击参数计算获取周边钻孔信息');
       this.renderData.calculateShow = true;
     }
@@ -412,29 +438,39 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
     console.log('drills==',this.renderData.drills);
     const distance200=[];
-    const distance1000=[];
-    let distancs=[];
+    const distance700=[];
+    // let distancs=[];
     this.renderData.drills.forEach(item=>{
       // {num: "K1", longitude: "34.6824", latitude: "113.7310"}
       const distance = AMap.GeometryUtil.distance([item.latitude, item.longitude],[lng, lat])
       console.log('distance===', distance);
       if(distance<200){
         distance200.push(item);
-      }else if(distance<1000){
-        distance1000.push(item);
+      }else if(distance<700){
+        distance700.push(item);
       }
     });
 
 
     let radius = 0;
     if(distance200.length>0){
-      distancs = distance200;
+      this.renderData.distancs = distance200;
       radius = 200;
     }else {
-      distancs = distance1000;
-      radius = 1000;
+      this.renderData.distancs = distance700;
+      radius = 700;
     }
+    if(this.renderData.circle200 !==null){
+      this.renderData.amap.remove(this.renderData.circle200);
+    }
+    if(this.renderData.circle700 !==null){
+      this.renderData.amap.remove(this.renderData.circle700);
+    }
+
     this._addRound(point, radius);
+    if(radius===700){
+      this._addRound(point, 200);
+    }
 
     const markers = this.renderData.amap.getAllOverlays('marker');
     markers.forEach(item=>{
@@ -442,8 +478,8 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
         item.setIcon(this.startIconBlue);
       }
     });
-    console.log('distancs=====',distancs);
-    this.calculateBasementSurface(distancs);
+    console.log('distancs=====',this.renderData.distancs);
+    this.calculateBasementSurface(this.renderData.distancs);
     // if(distancs.length>0){
     //   markers.forEach(marker=>{
     //     distancs.forEach(item=>{
@@ -456,6 +492,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     //   })
     // }
   }
+
 
   calculateBasementSurface(distancs){
     const basementList:any = this.cache.getNone('basement-list');
@@ -486,16 +523,35 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     // { title: '100年63%', index: '10063' },
     // { title: '100年10%', index: '10010' },
     // { title: '100年2%', index: '1002' },
-    for(let key in newBase[0]){
-      if(key !== 'num'){
-        let max = newBase[0];
-        for(let i=0; i< newBase.length; i++){
-          if(newBase[i+1] && Number(max[key])<Number(newBase[i+1][key])){
-            max = newBase[i+1];
-          }
-        }
-        maxBase[key] = max;
-      }
+    // for(let key in newBase[0]){
+    //   if(key !== 'num'){
+    //     let max = newBase[0];
+    //     for(let i=0; i< newBase.length; i++){
+    //       if(newBase[i+1] && Number(max[key])<Number(newBase[i+1][key])){
+    //         max = newBase[i+1];
+    //       }
+    //     }
+    //     maxBase[key] = max;
+    //   }
+    // }
+
+    //  用于存储最终最大值的计算结果
+    const probabilityList = {
+      "T=50年,P=63%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+      "T=50年,P=10%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+      "T=50年,P=2%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+      "T=100年,P=63%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+      "T=100年,P=10%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+      "T=100年,P=2%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+    }
+    // 用于临时存储有相同probability的点
+    const probabilityPoints = {
+      "T=50年,P=63%":[],
+      "T=50年,P=10%":[],
+      "T=50年,P=2%":[],
+      "T=100年,P=63%":[],
+      "T=100年,P=10%":[],
+      "T=100年,P=2%":[],
     }
 
     for(let key in newSurface[0]){
@@ -510,9 +566,78 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
       }
     }
 
+    // 遍历， 获取有相同probability属性的点， 在相同属性的点中比较最大值
+    for(let key in probabilityList){
+      newSurface.forEach((item:any)=>{
+        if(item.probability === key){
+          probabilityPoints[key].push(item);
+        }
+      })
+    }
 
-    console.log('maxBase===',maxBase);
-    console.log('maxSurface===',maxSurface);
+   for(let key in probabilityPoints){
+     if(probabilityPoints[key].length === 1){
+       probabilityList[key] = probabilityPoints[key][0];
+     }else if(probabilityPoints[key].length>1){
+       for(let i=0; i<probabilityPoints[key].length; i++){
+         if(probabilityList[key]['gal']< probabilityPoints[key][i]['gal'])
+         {
+           probabilityList[key]['gal'] = probabilityPoints[key][i]['gal'];
+         }
+         if(probabilityList[key]['βm']< probabilityPoints[key][i]['βm'])
+         {
+           probabilityList[key]['βm'] = probabilityPoints[key][i]['βm'];
+         }
+         if(probabilityList[key]['αmax']< probabilityPoints[key][i]['αmax'])
+         {
+           probabilityList[key]['αmax'] = probabilityPoints[key][i]['αmax'];
+         }
+         if(probabilityList[key]['t1']< probabilityPoints[key][i]['t1'])
+         {
+           probabilityList[key]['t1'] = probabilityPoints[key][i]['t1'];
+         }
+         if(probabilityList[key]['tg']< probabilityPoints[key][i]['tg'])
+         {
+           probabilityList[key]['tg'] = probabilityPoints[key][i]['tg'];
+         }
+         if(probabilityList[key]['r']< probabilityPoints[key][i]['r'])
+         {
+           probabilityList[key]['r'] = probabilityPoints[key][i]['r'];
+         }
+       }
+     }else if (probabilityPoints[key] ===0){
+
+     }
+   }
+
+
+
+   const commonObj = {
+     "T=50年,P=63%":{},
+     "T=50年,P=10%":{},
+     "T=50年,P=2%":{}
+   };
+   if(this.renderData.common){
+      this.renderData.common.forEach(item=>{
+        console.log(item.probability);
+        commonObj[item.probability] = item;
+      })
+   }
+
+    for(let key in commonObj){
+      for(let comKey in  commonObj[key]){
+        if(commonObj[key][comKey] > probabilityList[key][comKey]){
+          probabilityList[key][comKey] = commonObj[key][comKey];
+        }
+      }
+    }
+
+    // console.log('maxBase===',maxBase);
+    console.log('commonObj===',commonObj);
+    console.log('probabilityList===',probabilityList);
+    // 计算结果， 通过判断该字段， 知道系统是否进行过计算
+    this.cache.set('maxDizhenDongCan', probabilityList);
+
   }
   // 改变图上选点开启关闭
   changeClickShow(){
@@ -539,7 +664,26 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
       nzContent: '<b style="color: red;">清除后无法恢复</b>',
       nzOkType: 'primary',
       nzOkDanger: true,
-      nzOnOk: () => console.log('OK'),
+      nzOnOk: () => {
+        if(this.renderData.circle200 !==null){
+          this.renderData.amap.remove(this.renderData.circle200);
+        }
+        if(this.renderData.circle700 !==null){
+          this.renderData.amap.remove(this.renderData.circle700);
+        }
+        this.renderData.amap.remove(this.renderData.selectedPoint);
+        this.renderData.clickShow = false;
+        this.renderData.calculateShow = false;
+        this.renderData.distancs = [];
+        this.renderData.selectedPoint = null;
+
+        // 清除掉表单填写的内容
+        this.cache.remove('baseData');
+        this.cache.remove('gongChengData');
+        this.cache.remove('ruantuData');
+        this.cache.remove('maxDizhenDongCan');
+        this.cache.remove('gongChengSt');
+      },
       nzOnCancel: () => console.log('Cancel')
     });
   }

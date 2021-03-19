@@ -65,15 +65,8 @@ export class LiquidationComponent implements OnInit, OnDestroy {
           const index1 = queryParams.url.indexOf('/');
           const index2 = queryParams.url.lastIndexOf('.');
           this.renderData.title = queryParams.url.substring(index1+1, index2);
-          // this.data = this.cache.getNone('basement-list');
-          // console.log('basement-list=====',this.data);
+          this.renderData.isSpinning = true;
           this._electronService.ipcRenderer.send('read-txt-file',{type:'liquidation',path:newUrl});
-
-          // if(this.data&& this.data.length>0){
-          // }else {
-          //   this.renderData.isSpinning = true;
-          // }
-
         });
     });
 
@@ -82,7 +75,8 @@ export class LiquidationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('ngOnDestroy====');
-    // this.imgUrl = '';
+    this.columns = [];
+    this.data = [];
     this._electronService.ipcRenderer.removeAllListeners('read-txt-reply');
   }
 

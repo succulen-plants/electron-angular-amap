@@ -21,6 +21,10 @@ const COMPONENTS = [
   HeaderComponent,
   SidebarComponent,
   NzDemoMenuRecursiveComponent,
+  WorldComponent,
+  RuantuComponent,
+  BaseComponent,
+  GongchengComponent,
   ...SETTINGDRAWER,
 ];
 
@@ -35,6 +39,10 @@ import {LayoutNomenuComponent} from "./noMenu/nomenu.component";
 import {LayoutPassportComponent} from "./passport/passport.component";
 import {HeaderStorageComponent} from "./default/header/components/storage.component";
 import {NzDemoMenuRecursiveComponent} from "./default/menu/menu.component";
+import {WorldComponent} from "../routes/world/world.component";
+import {RuantuComponent} from "../routes/world/ruantu/ruantu.component";
+import {BaseComponent} from "../routes/world/base/base.component";
+import {GongchengComponent} from "../routes/world/gongcheng/gongcheng.component";
 const PASSPORT = [LayoutPassportComponent];
 
 @NgModule({

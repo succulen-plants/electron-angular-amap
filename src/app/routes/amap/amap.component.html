@@ -50,8 +50,8 @@
         <!--<span  class="name calculate"><img class="customIcon" src="./assets/icons/参数计算.png">参数计算</span>-->
       </a>
     </div>
-    <div class="button-node">
-      <a class="item"  (click)="clearResult()" [class.active]="renderData.clickShow">
+    <div class="button-node" *ngIf="renderData.calculateShow">
+      <a class="item"  (click)="clearResult()" [class.active]="renderData.calculateShow">
     <span class="icon">
     </span>
         <span  class="name"><img class="customIcon" src="./assets/icons/清除结果.png">清除结果</span>
@@ -83,8 +83,11 @@
       </sf>
     </div>
   <div class="header">参数计算</div>
-  <div class="body">
-
+  <div class="body" *ngIf="renderData.distancs.length">
+    II:
+    <span *ngFor="let item of renderData.distancs">
+      {{item.num}}
+    </span>
   </div>
 </div>
 

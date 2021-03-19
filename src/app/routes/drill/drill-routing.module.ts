@@ -6,6 +6,9 @@ import { RouterModule, Routes } from '@angular/router';
 import {DrillListComponent} from "./drill-list/drill-list.component";
 import {SoilComponent} from "./soil/soil.component";
 import {LiquidationComponent} from "./liquidation/liquidation.component";
+import {DengxiaoComponent} from "./dengxiao/dengxiao.component";
+import {CengtuComponent} from "./cengtu/cengtu.component";
+import {DongliComponent} from "./dongli/dongli.component";
 /**
  * 业务组件
  */
@@ -23,6 +26,18 @@ const routes: Routes = [
   {
     path: 'liquidation',
     component: LiquidationComponent,
+  },
+  {
+    path: 'dengxiao',
+    component: DengxiaoComponent,
+  },
+  {
+    path: 'cengtu',
+    component: CengtuComponent,
+  },
+  {
+    path: 'dongli',
+    component: DongliComponent,
   },
 ];
 

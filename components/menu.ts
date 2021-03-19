@@ -8,8 +8,8 @@ let count = 0;
 let open = false;
 let level = 1;
 // const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src';
-const recPath = 'D:\\ll\\';
-export  function readDirectory(dirname) {
+const recPath = 'D:\\ses\\'
+export  function readDirectory() {
   let directorys = [
     {name:'基岩时程', type:'txt', menu:{}},
     {name:'地质纵剖面图', type:'img', menu:{}},
@@ -29,8 +29,6 @@ export  function readDirectory(dirname) {
   });
 
   return directorys;
-
-
 
 }
 

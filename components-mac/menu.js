@@ -8,11 +8,12 @@ var fs = require("fs");
 var count = 0;
 var open = false;
 var level = 1;
-var recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src';
+var recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/ses/';
 // const recPath = 'D:\\ll\\';
-function readDirectory(dirname) {
+function readDirectory() {
     var directorys = [
         { name: '基岩时程', type: 'txt', menu: {} },
+        { name: '钻孔资料/物理力学性能指标', type: 'txt', menu: {} },
         { name: '地质纵剖面图', type: 'img', menu: {} },
         { name: '钻孔柱状图', type: 'img', menu: {} },
         { name: 'Amax区划图', type: 'img', menu: {} },
@@ -21,7 +22,7 @@ function readDirectory(dirname) {
         count = 0;
         level = 1;
         // const path = `${dirname}/src/assets/${item.type}/${item.name}`;
-        var path = recPath + "/assets/" + item.type + "/" + item.name;
+        var path = "" + recPath + item.type + "/" + item.name;
         // const path = `${recPath}${item.type}\\${item.name}`;
         // console.log('menu  path===',path);
         var directorysObj = readFile(path, item.name, item.type);
@@ -90,6 +91,9 @@ function readFile(path, name, type) {
             else if (type === 'txt') {
                 icon = "file-text";
                 link = '/txt';
+                if (name === '钻孔资料/物理力学性能指标') {
+                    link = '/achievement/file';
+                }
                 relativePathindex = path.indexOf('txt/');
                 relativePath = path.substr(relativePathindex + 4);
             }

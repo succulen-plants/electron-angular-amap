@@ -20,13 +20,14 @@ const routes: Routes = [
     path: '',
     component: LayoutDefaultComponent,
     children: [
-      // { path: '', redirectTo: 'nomenu', pathMatch: 'full' },
+      { path: '', redirectTo: 'nomenu', pathMatch: 'full' },
       // { path: 'home', component: HomeComponent },
       // { path: 'amap', component: AmapComponent },
       { path: 'achievement', loadChildren: () => import('./achievement/achievement.module').then(m => m.AchievementModule) },
       { path: 'txt', loadChildren: () => import('./txt/txt.module').then(m => m.TxtModule) },
       { path: 'drill', loadChildren: () => import('./drill/drill.module').then(m => m.DrillModule) },
       { path: 'dynamic', loadChildren: () => import('./dynamic/dynamic.module').then(m => m.DynamicModule) },
+      // { path: 'world', loadChildren: () => import('./world/world.module').then(m => m.WorldModule) },
       // { path: 'echarts', loadChildren: () => import('./charts/charts.module').then(m => m.ChartsModule) },
       // Exception
       // { path: 'exception', loadChildren: () => import('./routes/exception/exception.module').then(m => m.ExceptionModule) },
