@@ -130,7 +130,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
       this.renderData.isSpinning = false;
     });
     this._electronService.ipcRenderer.on('read-txt-reply', (event, data)=>{
-      console.log('====read-txt-reply====', data);
+      // console.log('====read-txt-reply====', data);
       if(data.status === 'success'){
         if(data.type==='ploy'){
           if(data.data.length>0){
@@ -150,7 +150,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
         // common 一般参数
         else if(data.type === 'common'){
           this.renderData.common = data.data;
-          console.log('common==========',this.renderData.common);
+          // console.log('common==========',this.renderData.common);
           this.cache.set('common', this.renderData.common);
         }
         else if(data.type === 'surface'){
@@ -182,46 +182,54 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     //   // 钻孔不存在时要去读取文件
     // }
 
+
+
+    this.map();
+
+
   }
 
   ngOnDestroy() {
   }
 
-  ngAfterViewInit() {
-    this.renderData.amap = new AMap.Map('map',{
-      // center: [116.400274, 39.905812],
-      center: [113.7177,34.6867],
-      zoom: 14,
-      mapStyle: 'amap://styles/28401ee6adcafe9e91827e599428632a'
-      // pitch: 70,
-      // viewMode: '3D',
-    });
+  ngAfterViewInit(){}
+
+  map() {
+
+     this.renderData.amap = new AMap.Map('map',{
+       // center: [116.400274, 39.905812],
+       center: [113.7177,34.6867],
+       zoom: 14,
+       mapStyle: 'amap://styles/28401ee6adcafe9e91827e599428632a'
+       // pitch: 70,
+       // viewMode: '3D',
+     });
+    console.log(this.renderData.amap);
     this.renderData.sacle = new AMap.Scale({  visible: true});
-    this.renderData.toolBar = new AMap.ToolBar({  visible: true});
-    this.renderData.mapType = new AMap.MapType({
-      defaultType: 0,  //0代表默认，1代表卫星
-      showRoad: false,
-      showTraffic: false,
-    });
+     this.renderData.toolBar = new AMap.ToolBar({  visible: true});
+     this.renderData.mapType = new AMap.MapType({
+       defaultType: 0,  //0代表默认，1代表卫星
+       showRoad: false,
+       showTraffic: false,
+     });
 
 
 
-    // this.renderData.mapType.hide();
-    this.renderData.mouseTool = new AMap.MouseTool(this.renderData.amap);
-    this.renderData.amap.addControl(this.renderData.sacle);
-    this.renderData.amap.addControl(this.renderData.toolBar);
-    this.renderData.amap.addControl(this.renderData.mapType);
-    console.log('=====amap=====',this.renderData.mapType);
+     // this.renderData.mapType.hide();
+     this.renderData.mouseTool = new AMap.MouseTool(this.renderData.amap);
+     this.renderData.amap.addControl(this.renderData.sacle);
+     this.renderData.amap.addControl(this.renderData.toolBar);
+     this.renderData.amap.addControl(this.renderData.mapType);
+     console.log('=====amap=====',this.renderData.mapType);
 
 
-    // 添加覆盖区域
-    // this.addPolygon();
+     // 添加覆盖区域
+     // this.addPolygon();
 
-    if(this.renderData.drills.length>0) {
-      this.changeOverlayGroup();
-    }
+     if(this.renderData.drills.length>0) {
+       this.changeOverlayGroup();
+     }
 
-    console.log('basement-list===',this.cache.getNone('basement-list'));
   }
 
   // 开启测距功能
@@ -292,23 +300,22 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     //   [116.402292, 39.892353],
     //   [116.389846, 39.891365]
     // ]
-    if(this.renderData.polygonPath!== null){
-      this.renderData.amap.remove(this.renderData.polygonPath)
+    if(this.renderData.amap){
+      if(this.renderData.polygonPath!== null){
+        this.renderData.amap.remove(this.renderData.polygonPath)
+      }
+      // this.renderData.amap.remove(this.renderData)
+      const polygon = new AMap.Polygon({
+        path: path,
+        strokeColor: "#4438fd",
+        strokeWeight: 2,
+        strokeOpacity: 1,
+        fillOpacity: 0,
+        zIndex: 50,
+      });
+      this.renderData.polygonPath = polygon;
+      this.renderData.amap.add(polygon)
     }
-
-
-    // this.renderData.amap.remove(this.renderData)
-    const polygon = new AMap.Polygon({
-      path: path,
-      strokeColor: "#4438fd",
-      strokeWeight: 2,
-      strokeOpacity: 1,
-      fillOpacity: 0,
-      zIndex: 50,
-    });
-    this.renderData.polygonPath = polygon;
-    this.renderData.amap.add(polygon)
-
 
   }
 

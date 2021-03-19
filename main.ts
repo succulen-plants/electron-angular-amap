@@ -12,6 +12,9 @@ import {asyncWritetxtFile} from './components-mac/writeFile';
 import {writeDocTemplater} from './components-mac/docTemplater';
 
 
+// 异步读取txt文件内容
+const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/ses/'
+
 // 窗口
 let win: BrowserWindow = null;
 // 文件目录map
@@ -58,6 +61,8 @@ function createWindow(): BrowserWindow {
       protocol: 'file:',
       slashes: true
     }));
+
+
   }
 
   // Emitted when the window is closed.
@@ -68,8 +73,7 @@ function createWindow(): BrowserWindow {
     win = null;
   });
 
-  //开启world 功能
-  writeDocTemplater(win, recPath);
+
 
   return win;
 }
@@ -85,6 +89,12 @@ try {
   app.on('ready', () => {
     directorys = readDirectory();
     setTimeout(createWindow, 400);
+
+    //开启world 功能
+    writeDocTemplater(win, recPath);
+
+    readTxtFile(`${recPath}`);
+    asyncWritetxtFile(`${recPath}txt/`);
   });
 
   // Quit when all windows are closed.
@@ -127,8 +137,7 @@ ipcMain.on('read-file-directorys', function(event, arg) {
 
 
 
-// 异步读取txt文件内容
-const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/ses/'
+
 
 console.log('__dirname=====',__dirname);
 
@@ -136,8 +145,7 @@ console.log('__dirname=====',__dirname);
 // const recPath = 'D:\\ll\\'
 // asyncReadtxtFile(`${recPath}`);
 // asyncWritetxtFile(`${recPath}txt\\`);
-readTxtFile(`${recPath}`);
-asyncWritetxtFile(`${recPath}txt/`);
+
 
 
 
