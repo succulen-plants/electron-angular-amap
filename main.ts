@@ -1,19 +1,17 @@
-import { app, BrowserWindow, screen, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
 
+import {readTxtFile} from './components/readTxtFile2';
+import {readDirectory} from './components/menu';
+import {asyncWritetxtFile} from './components/writeFile';
+import {writeDocTemplater} from "./components-mac/docTemplater";
 
-
-
-import {readTxtFile} from './components-mac/readTxtFile2';
-import {readDirectory} from './components-mac/menu';
-import {asyncWritetxtFile} from './components-mac/writeFile';
-import {writeDocTemplater} from './components-mac/docTemplater';
 
 
 // 异步读取txt文件内容
-const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/ses/'
+const recPath = 'D:\\ses\\'
 
 // 窗口
 let win: BrowserWindow = null;
@@ -44,7 +42,7 @@ function createWindow(): BrowserWindow {
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
       enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
-  });
+});
 
   if (serve) {
 
@@ -54,15 +52,12 @@ function createWindow(): BrowserWindow {
       electron: require(`${__dirname}/node_modules/electron`)
     });
     win.loadURL('http://localhost:4200');
-
   } else {
     win.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
       slashes: true
     }));
-
-
   }
 
   // Emitted when the window is closed.
@@ -87,14 +82,12 @@ try {
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
-    directorys = readDirectory();
+    directorys = readDirectory(recPath);
     setTimeout(createWindow, 400);
-
     //开启world 功能
     writeDocTemplater(win, recPath);
-
     readTxtFile(`${recPath}`);
-    asyncWritetxtFile(`${recPath}txt/`);
+    asyncWritetxtFile(`${recPath}txt\\`);
   });
 
   // Quit when all windows are closed.
@@ -121,16 +114,15 @@ try {
 
 }
 
-
+//
 // ipcMain.on('read-img-file', function(event, arg) {
-//   console.log('read-img-file=====',arg);
-//   // event.sender.send('img-file-reply', {imgFileObj, type:'img'});
-//   event.sender.send('read-img-reply', {path:__dirname});
+//   console.log('ipcMain=====',imgFileObj);
+//   event.sender.send('img-file-reply', {imgFileObj, type:'img'});
 // });
 
 
 ipcMain.on('read-file-directorys', function(event, arg) {
-  // console.log('ipcMain=====',directorys);
+  console.log('ipcMain=====',directorys);
   event.sender.send('file-directorys-reply', {menu:directorys});
 });
 
@@ -138,14 +130,13 @@ ipcMain.on('read-file-directorys', function(event, arg) {
 
 
 
-
-console.log('__dirname=====',__dirname);
-
 // 异步读取txt文件内容
-// const recPath = 'D:\\ll\\'
-// asyncReadtxtFile(`${recPath}`);
-// asyncWritetxtFile(`${recPath}txt\\`);
+// const recPath = '/Users/luotengzhan/work/huaNuo/study/electron-桌面应用/ses/src'
 
+
+
+// asyncReadtxtFile(`${__dirname}/src/assets/`);
+// asyncWritetxtFile(`${__dirname}/src/assets/txt/`);
 
 
 

@@ -2,7 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const Docxtemplater = require('docxtemplater');
 const JSZip = require('jszip');
-var ImageModule = require('open-docxtemplater-image-module');
+// var ImageModule = require('open-docxtemplater-image-module');
+var ImageModule = require('docxtemplater-image-module-free');
+
 
 function read(){
 
@@ -48,7 +50,7 @@ function read(){
   }
 
   let buf = doc.getZip().generate({type:'nodebuffer'});
-  fs.writeFileSync(path.resolve(__dirname, '141.docx'), buf)
+  fs.writeFileSync(path.resolve(__dirname, '144.docx'), buf)
 }
 
 
