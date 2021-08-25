@@ -3,7 +3,7 @@
  * readFile： 需要通过读取文件列表获取菜单
  */
 
-import { environment } from '@env/environment';
+import { environment } from "@env/environment";
 
 // const {  baseUrl } = environment;
 
@@ -217,13 +217,13 @@ export const achievementList = [
     menu: 'menu.manage',
     auth: 'haveAuth',
       navImg: `${baseImgUrl}/icons/土层计算模型.png`,
+      readFile: '土层计算模型',
     "children": [{
     title: "土层计算模型",
     "i18n": "土层计算模型",
     "group": true,
     "hideInBreadcrumb": true,
     "children":[
-
     ]
   }]
 }]},

@@ -8,7 +8,8 @@ const fs = require('fs');
 const path = require('path');
 const Docxtemplater = require('docxtemplater');
 const JSZip = require('jszip');
-var ImageModule = require('open-docxtemplater-image-module');
+// var ImageModule = require('open-docxtemplater-image-module');
+var ImageModule = require('docxtemplater-image-module-free');
 
 
 
@@ -65,7 +66,8 @@ function downLoad(newpath, args, event, recPath){
 
 
   // let content= fs.readFileSync(path.resolve(__dirname, 'myTemplate.docx'), 'binary');
-  let content= fs.readFileSync('dist/assets/技术服务系统查询报告模板.docx', 'binary');
+  // let content= fs.readFileSync('dist/assets/技术服务系统查询报告模板.docx', 'binary');
+  let content= fs.readFileSync(`${recPath}技术服务系统查询报告模板.docx`, 'binary');
   let zip = new JSZip(content);
   let doc = new Docxtemplater();
   doc.attachModule(imageModule);

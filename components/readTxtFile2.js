@@ -155,6 +155,22 @@ function readTxtFile(path) {
                             dataList_1.push(node);
                         }
                     }
+                    // 土层计算模型
+                    else if(arg.type === 'tuceng'){
+                      if(Number(array[0])){
+                        const node = {
+                          'cenghao':array[0],
+                          'yanxing':array[1],
+                          'bianhao':array[2],
+                          'shendu':array[3],
+                          'houdu':array[4],
+                          'midu':array[5],
+                          'sudu':array[6],
+                          'beizhu':array[7],
+                        };
+                        dataList.push(node);
+                      }
+                    }
                     else if (arg.type === 'common') {
                         if (array[0] !== '超越概率') {
                             var node = {

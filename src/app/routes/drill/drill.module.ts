@@ -7,6 +7,7 @@ import {LiquidationComponent} from "./liquidation/liquidation.component";
 import {DengxiaoComponent} from "./dengxiao/dengxiao.component";
 import {CengtuComponent} from "./cengtu/cengtu.component";
 import {DongliComponent} from "./dongli/dongli.component";
+import {TucengComponent} from "./tuceng/tuceng.component";
 
 
 const COMPONENTS = [
@@ -15,7 +16,8 @@ const COMPONENTS = [
   LiquidationComponent,
   DengxiaoComponent,
   CengtuComponent,
-  DongliComponent
+  DongliComponent,
+  TucengComponent
 ];
 
 const COMPONENTS_NOROUNT = [];

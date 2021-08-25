@@ -90,12 +90,12 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
     if(item.link!==null && item.link){
       if(item.link === '/world'){
         const maxDizhenDongCan = this.cache.getNone('maxDizhenDongCan');
+        console.log('maxDizhenDongCan======', maxDizhenDongCan);
         if(maxDizhenDongCan){
           this.openModel();
         }else{
           this.message.error('请先进行参数计算！');
         }
-
       }else{
         this.router.navigateByUrl(item.link);
       }
@@ -103,13 +103,12 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
       // readFile 读取文件获取菜单
       if(item.readFile!==null && item.readFile){
         const menu:any[] = this.cache.getNone(item.title);
-
-        // this.menuService.add(menu);
+        console.log(`${item.title}发送服务`);
         this.dataCommunicateService.emitData({
           target: 'NzDemoMenuRecursiveComponent',
-          value: menu ,
+          value: menu,
         });
-        // this.cache.set('menu', menus)
+        // this.cache.set('menu', menu)
         this.getDefaultRoute(menu[0]);
       }else{
         if(item.menu && item.children!==null){
@@ -123,6 +122,7 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
             menuwl[0].icon = 'border-inner';
             item.children[0].children[6] = menuwl[0];
           }
+          console.log(`${item.title}发送服务`);
           this.dataCommunicateService.emitData({
             target: 'NzDemoMenuRecursiveComponent',
             value: item.children ,
@@ -153,10 +153,13 @@ export class HeaderSelectDrawerComponent implements OnInit,AfterViewInit {
     })
   }
 
-      getDefaultRoute(currentMenu:any){
-    console.log('currentMenu====',currentMenu);
-    console.log(currentMenu.link);
-
+  /**
+   * 获取默认路由
+   * @param currentMenu
+   */
+  getDefaultRoute(currentMenu:any){
+    // console.log('currentMenu====',currentMenu);
+    // console.log(currentMenu.link);
     if(currentMenu.link){
       this.router.navigateByUrl(currentMenu.link)
     }else{

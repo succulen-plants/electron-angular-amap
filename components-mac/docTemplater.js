@@ -55,10 +55,11 @@ var electron_1 = require("electron");
 var fs = require('fs');
 var path = require('path');
 var Docxtemplater = require('docxtemplater');
-// const Docxtemplater = require(`${__dirname}/node_modules/docxtemplater`)
 var JSZip = require('jszip');
+// const Docxtemplater = require(`${__dirname}/node_modules/docxtemplater`)
 // const JSZip = require(`${__dirname}/node_modules/jszip`);
-var ImageModule = require('open-docxtemplater-image-module');
+// var ImageModule = require('open-docxtemplater-image-module');
+var ImageModule = require('docxtemplater-image-module-free');
 function getDate() {
     var date = new Date();
     var year = date.getFullYear();
@@ -89,21 +90,19 @@ function downLoad(newpath, args, event, recPath) {
         //tagName is 'image'
         //tip: you can use node module 'image-size' here
         if (tagValue.indexOf('区域地震评价位置图') !== -1) {
-            return [432, 382];
+            return [518, 428];
         }
         if (tagValue.indexOf('区域地震构造图') !== -1) {
-            return [538, 413];
+            return [552, 432];
         }
         if (tagValue.indexOf('近场区地震地质构造图') !== -1) {
-            return [485, 423];
+            return [552, 432];
         }
-        else {
-            return [432, 382];
-        }
+        return [432, 382];
     };
     var imageModule = new ImageModule(opts);
     // let content= fs.readFileSync(path.resolve(__dirname, 'myTemplate.docx'), 'binary');
-    var content = fs.readFileSync('dist/assets/技术服务系统查询报告模板.docx', 'binary');
+    var content = fs.readFileSync(recPath + "\u6280\u672F\u670D\u52A1\u7CFB\u7EDF\u67E5\u8BE2\u62A5\u544A\u6A21\u677F.docx", 'binary');
     var zip = new JSZip(content);
     var doc = new Docxtemplater();
     doc.attachModule(imageModule);
@@ -155,10 +154,12 @@ function writeDocTemplater(win, recPath) {
                 case 1:
                     _a = _b.sent(), canceled = _a.canceled, filePaths = _a.filePaths;
                     if (!canceled) {
-                        downLoadPath = !canceled ? filePaths[0] : '';
+                        // downLoadPath = !canceled ? filePaths[0] : '';
+                        downLoadPath = filePaths[0];
                         console.log('===downLoadPath===', downLoadPath);
                         args = __assign(__assign({}, args), images);
                         downLoad(downLoadPath, args, event, recPath);
+                        // downLoad(downLoadPath, images, event, recPath);
                     }
                     return [2 /*return*/];
             }

@@ -21,9 +21,10 @@ export class NzDemoMenuRecursiveComponent implements AfterViewInit {
                   private cdr: ChangeDetectorRef,
                   public cache: CacheService,
   ){
-    console.log('====NzDemoMenuRecursiveComponent====');
+    console.log('===layout-menu===');
     this.data_emitter = this.dataCommunicateService.getData().subscribe(data =>{
-      console.log('data',data);
+      console.log(`menu收到数据更新`);
+      console.log('NzDemoMenuRecursiveComponent ==== data',data);
       if(data.target === 'NzDemoMenuRecursiveComponent'){
         this.menus = data.value;
         console.log(this.menus);
@@ -40,6 +41,7 @@ export class NzDemoMenuRecursiveComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log('===菜单初始化');
     if(this.menus.length === 0){
       this.menus = this.cache.getNone('menu');
       console.log(this.menus);

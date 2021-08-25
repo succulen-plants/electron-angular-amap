@@ -64,7 +64,7 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
     distancs:[],
     common:null,
     surface:null,
-
+    setinterval: null,
   }
 
   startIconBlue = new AMap.Icon({
@@ -176,6 +176,8 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
     this._electronService.ipcRenderer.send('read-txt-file',{type:'common',path:'txt/一般工程设计地震动参数工作表.txt'});
     this._electronService.ipcRenderer.send('read-txt-file',{type:'surface',path:'txt/地震动参数成果表/地表地震动参数成果表.txt'});
+
+
     // this._electronService.ipcRenderer.send('read-txt-file',{type:'surface',path:newUrl});
 
     // if(!this.renderData.drills ){
@@ -502,149 +504,139 @@ export class AmapComponent implements OnInit, OnDestroy , AfterViewInit{
 
 
   calculateBasementSurface(distancs){
+    console.log('定时再次加载');
     const basementList:any = this.cache.getNone('basement-list');
-    const surfaceList:any = this.cache.getNone('surface-list');
-    console.log('basementList===',basementList);
-    console.log('surfaceList===',surfaceList);
-    let newBase = [], newSurface = [], maxBase:any={}, maxSurface = [];
-    distancs.forEach(dis=>{
-      basementList.forEach(bas=>{
-        if(dis.num === bas.num){
-          newBase.push(bas);
-        }
+    let surfaceList:any = this.cache.getNone('surface-list');
+    if(surfaceList){
+      clearInterval(this.renderData.setinterval);
+      console.log('basementList===',basementList);
+      console.log('surfaceList===',surfaceList);
+      let newBase = [], newSurface = [], maxBase:any={}, maxSurface = [];
+      distancs.forEach(dis=>{
+        basementList.forEach(bas=>{
+          if(dis.num === bas.num){
+            newBase.push(bas);
+          }
+        })
+
+        surfaceList.forEach(sur=>{
+          if(dis.num === sur.num){
+            newSurface.push(sur);
+          }
+        })
       })
 
-      surfaceList.forEach(sur=>{
-        if(dis.num === sur.num){
-          newSurface.push(sur);
+      console.log('newBase===',newBase);
+      console.log('newSurface===',newSurface);
+
+
+      //  用于存储最终最大值的计算结果
+      const probabilityList = {
+        "T=50年,P=63%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+        "T=50年,P=10%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+        "T=50年,P=2%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+        "T=100年,P=63%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+        "T=100年,P=10%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+        "T=100年,P=2%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
+      }
+      // 用于临时存储有相同probability的点
+      const probabilityPoints = {
+        "T=50年,P=63%":[],
+        "T=50年,P=10%":[],
+        "T=50年,P=2%":[],
+        "T=100年,P=63%":[],
+        "T=100年,P=10%":[],
+        "T=100年,P=2%":[],
+      }
+
+      for(let key in newSurface[0]){
+        if(key !== 'num' && key!== 'probability'){
+          let max = newSurface[0];
+          for(let i=0; i< newSurface.length; i++){
+            if(newSurface[i+1] && Number(max[key])<Number(newSurface[i+1][key])){
+              max = newSurface[i+1];
+            }
+          }
+          maxSurface[key] = max;
         }
-      })
-    })
+      }
 
-    console.log('newBase===',newBase);
-    console.log('newSurface===',newSurface);
-    // { title: '控制点', index: 'num' },
-    // { title: '50年63%', index: '5063' },
-    // { title: '50年10%', index: '5010' },
-    // { title: '50年2%', index: '502' },
-    // { title: '100年63%', index: '10063' },
-    // { title: '100年10%', index: '10010' },
-    // { title: '100年2%', index: '1002' },
-    // for(let key in newBase[0]){
-    //   if(key !== 'num'){
-    //     let max = newBase[0];
-    //     for(let i=0; i< newBase.length; i++){
-    //       if(newBase[i+1] && Number(max[key])<Number(newBase[i+1][key])){
-    //         max = newBase[i+1];
-    //       }
-    //     }
-    //     maxBase[key] = max;
-    //   }
-    // }
+      // 遍历， 获取有相同probability属性的点， 在相同属性的点中比较最大值
+      for(let key in probabilityList){
+        newSurface.forEach((item:any)=>{
+          if(item.probability === key){
+            probabilityPoints[key].push(item);
+          }
+        })
+      }
 
-    //  用于存储最终最大值的计算结果
-    const probabilityList = {
-      "T=50年,P=63%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
-      "T=50年,P=10%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
-      "T=50年,P=2%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
-      "T=100年,P=63%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
-      "T=100年,P=10%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
-      "T=100年,P=2%":{'gal':0, 'βm':0,'αmax':0,'t1':0, 'tg':0, 'r':0},
-    }
-    // 用于临时存储有相同probability的点
-    const probabilityPoints = {
-      "T=50年,P=63%":[],
-      "T=50年,P=10%":[],
-      "T=50年,P=2%":[],
-      "T=100年,P=63%":[],
-      "T=100年,P=10%":[],
-      "T=100年,P=2%":[],
-    }
+      for(let key in probabilityPoints){
+        if(probabilityPoints[key].length === 1){
+          probabilityList[key] = probabilityPoints[key][0];
+        }else if(probabilityPoints[key].length>1){
+          for(let i=0; i<probabilityPoints[key].length; i++){
+            if(probabilityList[key]['gal']< probabilityPoints[key][i]['gal'])
+            {
+              probabilityList[key]['gal'] = probabilityPoints[key][i]['gal'];
+            }
+            if(probabilityList[key]['βm']< probabilityPoints[key][i]['βm'])
+            {
+              probabilityList[key]['βm'] = probabilityPoints[key][i]['βm'];
+            }
+            if(probabilityList[key]['αmax']< probabilityPoints[key][i]['αmax'])
+            {
+              probabilityList[key]['αmax'] = probabilityPoints[key][i]['αmax'];
+            }
+            if(probabilityList[key]['t1']< probabilityPoints[key][i]['t1'])
+            {
+              probabilityList[key]['t1'] = probabilityPoints[key][i]['t1'];
+            }
+            if(probabilityList[key]['tg']< probabilityPoints[key][i]['tg'])
+            {
+              probabilityList[key]['tg'] = probabilityPoints[key][i]['tg'];
+            }
+            if(probabilityList[key]['r']< probabilityPoints[key][i]['r'])
+            {
+              probabilityList[key]['r'] = probabilityPoints[key][i]['r'];
+            }
+          }
+        }else if (probabilityPoints[key] ===0){
 
-    for(let key in newSurface[0]){
-      if(key !== 'num' && key!== 'probability'){
-        let max = newSurface[0];
-        for(let i=0; i< newSurface.length; i++){
-          if(newSurface[i+1] && Number(max[key])<Number(newSurface[i+1][key])){
-            max = newSurface[i+1];
+        }
+      }
+
+
+
+      const commonObj = {
+        "T=50年,P=63%":{},
+        "T=50年,P=10%":{},
+        "T=50年,P=2%":{}
+      };
+      if(this.renderData.common){
+        this.renderData.common.forEach(item=>{
+          console.log(item.probability);
+          commonObj[item.probability] = item;
+        })
+      }
+
+      for(let key in commonObj){
+        for(let comKey in  commonObj[key]){
+          if(commonObj[key][comKey] > probabilityList[key][comKey]){
+            probabilityList[key][comKey] = commonObj[key][comKey];
           }
         }
-        maxSurface[key] = max;
       }
+
+      // console.log('maxBase===',maxBase);
+      console.log('commonObj===',commonObj);
+      console.log('probabilityList===',probabilityList);
+      console.log('maxDizhenDongCan===',probabilityList);
+      // 计算结果， 通过判断该字段， 知道系统是否进行过计算
+      this.cache.set('maxDizhenDongCan', probabilityList);
+    }else {
+      this.renderData.setinterval = setInterval(()=>{this.calculateBasementSurface(distancs)}, 1000)
+        this.message.error('数据加载中， 请稍后==')
     }
-
-    // 遍历， 获取有相同probability属性的点， 在相同属性的点中比较最大值
-    for(let key in probabilityList){
-      newSurface.forEach((item:any)=>{
-        if(item.probability === key){
-          probabilityPoints[key].push(item);
-        }
-      })
-    }
-
-   for(let key in probabilityPoints){
-     if(probabilityPoints[key].length === 1){
-       probabilityList[key] = probabilityPoints[key][0];
-     }else if(probabilityPoints[key].length>1){
-       for(let i=0; i<probabilityPoints[key].length; i++){
-         if(probabilityList[key]['gal']< probabilityPoints[key][i]['gal'])
-         {
-           probabilityList[key]['gal'] = probabilityPoints[key][i]['gal'];
-         }
-         if(probabilityList[key]['βm']< probabilityPoints[key][i]['βm'])
-         {
-           probabilityList[key]['βm'] = probabilityPoints[key][i]['βm'];
-         }
-         if(probabilityList[key]['αmax']< probabilityPoints[key][i]['αmax'])
-         {
-           probabilityList[key]['αmax'] = probabilityPoints[key][i]['αmax'];
-         }
-         if(probabilityList[key]['t1']< probabilityPoints[key][i]['t1'])
-         {
-           probabilityList[key]['t1'] = probabilityPoints[key][i]['t1'];
-         }
-         if(probabilityList[key]['tg']< probabilityPoints[key][i]['tg'])
-         {
-           probabilityList[key]['tg'] = probabilityPoints[key][i]['tg'];
-         }
-         if(probabilityList[key]['r']< probabilityPoints[key][i]['r'])
-         {
-           probabilityList[key]['r'] = probabilityPoints[key][i]['r'];
-         }
-       }
-     }else if (probabilityPoints[key] ===0){
-
-     }
-   }
-
-
-
-   const commonObj = {
-     "T=50年,P=63%":{},
-     "T=50年,P=10%":{},
-     "T=50年,P=2%":{}
-   };
-   if(this.renderData.common){
-      this.renderData.common.forEach(item=>{
-        console.log(item.probability);
-        commonObj[item.probability] = item;
-      })
-   }
-
-    for(let key in commonObj){
-      for(let comKey in  commonObj[key]){
-        if(commonObj[key][comKey] > probabilityList[key][comKey]){
-          probabilityList[key][comKey] = commonObj[key][comKey];
-        }
-      }
-    }
-
-    // console.log('maxBase===',maxBase);
-    console.log('commonObj===',commonObj);
-    console.log('probabilityList===',probabilityList);
-    // 计算结果， 通过判断该字段， 知道系统是否进行过计算
-    this.cache.set('maxDizhenDongCan', probabilityList);
-
   }
   // 改变图上选点开启关闭
   changeClickShow(){

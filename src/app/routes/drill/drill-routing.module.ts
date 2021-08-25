@@ -9,6 +9,7 @@ import {LiquidationComponent} from "./liquidation/liquidation.component";
 import {DengxiaoComponent} from "./dengxiao/dengxiao.component";
 import {CengtuComponent} from "./cengtu/cengtu.component";
 import {DongliComponent} from "./dongli/dongli.component";
+import {TucengComponent} from "./tuceng/tuceng.component";
 /**
  * 业务组件
  */
@@ -38,6 +39,10 @@ const routes: Routes = [
   {
     path: 'dongli',
     component: DongliComponent,
+  },
+  {
+    path: 'tuceng',
+    component: TucengComponent,
   },
 ];
 

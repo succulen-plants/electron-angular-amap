@@ -72,6 +72,7 @@ export class WorldComponent implements OnInit, OnDestroy {
     console.log('baseData===',baseData);
     console.log('gongChengData===',gongChengData);
     console.log('ruantuData==',ruantuData);
+    console.log('common==',common);
 
     if(!baseData ||  baseData=== null){
       this.message.info('请填写基本信息');

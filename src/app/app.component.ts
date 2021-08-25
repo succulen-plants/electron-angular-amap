@@ -7,6 +7,7 @@ import { filter } from 'rxjs/operators';
 import { environment } from '@env/environment';
 import {ElectronService} from "ngx-electron";
 
+
 @Component({
   selector: 'app-root',
   template: ` <router-outlet></router-outlet> `,

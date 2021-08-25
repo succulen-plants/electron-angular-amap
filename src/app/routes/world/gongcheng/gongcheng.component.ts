@@ -132,6 +132,7 @@ export class GongchengComponent implements OnInit, OnDestroy {
 
 
     const maxDizhenDongCan = this.cache.getNone('maxDizhenDongCan');
+    console.log('maxDizhenDongCan====', maxDizhenDongCan);
     if(maxDizhenDongCan){
       this.renderData.maxDizhenDongCan = maxDizhenDongCan;
     }
@@ -152,7 +153,7 @@ export class GongchengComponent implements OnInit, OnDestroy {
       this.data = [];
       const pathValue = e.pathValue;
       pathValue.forEach(item => {
-          this.data.push(this.renderData.maxDizhenDongCan[item]);
+          this.data.push({'probability':item,...this.renderData.maxDizhenDongCan[item]});
       })
     }
 

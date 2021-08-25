@@ -36,6 +36,7 @@ const routes: Routes = [
   {
     path: 'nomenu',
     component: LayoutNomenuComponent,
+    // component: LayoutDefaultComponent,
     children: [
       { path: '', redirectTo: 'amap', pathMatch: 'full' },
       { path: 'amap', loadChildren: () => import('./amap/amap.module').then(m => m.AmapModule) },
