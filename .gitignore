@@ -8,6 +8,8 @@
 /release
 /ses
 /ses-old
+/ses-new
+/src/assets/
 main.js
 src/**/*.js
 !src/karma.conf.js
